@@ -44,6 +44,8 @@ const scene = new THREE.Scene()
 /**
  * Models
 */
+//OK THE FOX HAS DISAPPEARED SINCE DOING THE STUFF TO GET IT ON TO GITHUB PAGES - ok sorted - needed a dot before the slash in the path...
+
 
 //Have left draco loader in because hope to add my own blender model
 // // have to instantiate DRACOLoader ***BEFORE*** GLTFLoader
@@ -70,14 +72,14 @@ let foxWalk = null
 let foxRun = null
 //load the fox
 gltfLoader.load(
-    '/models/Fox/glTF/Fox.gltf',
+    './models/Fox/glTF/Fox.gltf',
     (gltf) => {
         // console.log(gltf)
 
         //Model: scale the fox:
         gltf.scene.scale.set(0.025, 0.025, 0.025)
         gltf.scene.position.set(0, 0, -90)
-        console.log(gltf.scene);
+        // console.log(gltf.scene);
         foxModel = gltf.scene;
 
         //need an animation mixer to deal with the included animations
@@ -124,6 +126,7 @@ scene.add(coneMesh);
 // const lowerWheatyShape = new THREE.Shape();
 // lowerWheatyShape.moveTo()
 
+//Lower Wheaty Field only:
 const lowerWheatyGeojson =
 { 
 "type": "Feature", 
@@ -135,8 +138,9 @@ const coordinates = lowerWheatyGeojson.geometry.coordinates[0][0];
 
 const shape = new THREE.Shape();
 
+//drawing the shape:
 coordinates.forEach((coordinate, i) => {
-    //I think these figures were suggested by chatgpt?
+    //I think these figures were suggested by chatgpt? anyway it's to reduce the crazy values - must be a better way - Do I need to keep the raw values though to integrate with elevation data or will I do this a whole different way eventually??? Probably.
     const offsetX = 266158;
     const offsetY = 98114;
     if (i === 0) {
@@ -163,28 +167,31 @@ const lowerWheaty = new THREE.Mesh(
     roughness: 0.9,
     side: THREE.DoubleSide
 }))
-console.log(lowerWheaty);
+// console.log(lowerWheaty);
 lowerWheaty.rotation.x = Math.PI * -0.5
 lowerWheaty.position.set(-20, -0.1, 20)
 lowerWheaty.receiveShadow = true
 scene.add(lowerWheaty);
 
 
+// All the fields: ---------------:
 
-/**
- * Floor
- */
-// const floor = new THREE.Mesh(
-//     new THREE.PlaneGeometry(10, 10),
-//     new THREE.MeshStandardMaterial({
-//         color: '#444444',
-//         metalness: 0,
-//         roughness: 0.5
-//     })
-// )
-// floor.receiveShadow = true
-// floor.rotation.x = - Math.PI * 0.5
-// scene.add(floor)
+// ok now just get stuff out of separate file (utm version):
+
+// But wait... won't I want the fields separately anyway in their own variables and put the  drawing of the shape into a function?
+const fields = [];
+
+fetch('./geojson/utm/fields-fenced-area.geojson')
+    .then(response => response.json()) 
+    .then(geojsonData => {
+        // gets first field name:
+        // console.log(geojsonData.features[0].properties.Field_Name)
+        geojsonData.features.forEach((field) => {          
+            // console.log(field.geometry.coordinates[0][0]);
+            fields.push(field.geometry.coordinates[0][0]);
+        })
+    });
+console.log(fields);
 
 
 /**
@@ -273,7 +280,6 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
-
 /**
  * Sky
  */
@@ -325,6 +331,7 @@ const tick = () =>
             // foxMixer.stopAllAction()
             foxWalk.play()
             foxModel.position.z += deltaTime * foxWalkSpeed * 0.5
+            // Bye fox!!
         } //there are better ways -see AnimationMixer in the docs..
     }
     

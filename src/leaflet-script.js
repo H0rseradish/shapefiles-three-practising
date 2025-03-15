@@ -65,7 +65,7 @@ map.on('click', onMapClick);
 fetch('./geojson/epsg4326/fields_fenced_area_epsg4326.geojson')
     .then(response => response.json())
     .then(geojsonData => {
-        console.log(geojsonData)
+        // console.log(geojsonData)
      L.geoJSON(geojsonData).addTo(map);
     });
 
