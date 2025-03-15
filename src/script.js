@@ -117,7 +117,6 @@ coneMesh.receiveShadow = true;
 scene.add(coneMesh);
 
 
-
 /**
  * Field(s)
  */
@@ -331,8 +330,8 @@ const tick = () =>
             // foxMixer.stopAllAction()
             foxWalk.play()
             foxModel.position.z += deltaTime * foxWalkSpeed * 0.5
-            // Bye fox!!
-        } //there are better ways -see AnimationMixer in the docs..
+            // Bye, fox!!
+        } // there are better ways? -see AnimationMixer in the docs..
     }
     
     
