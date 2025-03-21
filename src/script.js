@@ -1,4 +1,4 @@
- import * as THREE from 'three'
+import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { Sky } from 'three/addons/objects/Sky.js'
 
@@ -54,67 +54,67 @@ const scene = new THREE.Scene()
 // dracoLoader.setDecoderPath('/draco/')
 
 //instantiate glTFLoader:
-const gltfLoader = new GLTFLoader()
+// const gltfLoader = new GLTFLoader()
 
-// finally, give the dracoLoader instance to the the gltf loader, using setDRACOLoader():
-// gltfLoader.setDRACOLoader(dracoLoader)
+// // finally, give the dracoLoader instance to the the gltf loader, using setDRACOLoader():
+// // gltfLoader.setDRACOLoader(dracoLoader)
 
-// //You have to load it -  and then do something with it
-// //takes path to gltf file, and 3 callbacks tracking progress
+// // //You have to load it -  and then do something with it
+// // //takes path to gltf file, and 3 callbacks tracking progress
 
 
 
-// neeed to create this in global scope because need to pass it into the tick function to update it on each frame
-let foxMixer = null
-let foxModel = null
-let foxStand = null
-let foxWalk = null
-let foxRun = null
-//load the fox
-gltfLoader.load(
-    './models/Fox/glTF/Fox.gltf',
-    (gltf) => {
-        // console.log(gltf)
+// // neeed to create this in global scope because need to pass it into the tick function to update it on each frame
+// let foxMixer = null
+// let foxModel = null
+// let foxStand = null
+// let foxWalk = null
+// let foxRun = null
+// //load the fox
+// gltfLoader.load(
+//     './models/Fox/glTF/Fox.gltf',
+//     (gltf) => {
+//         // console.log(gltf)
 
-        //Model: scale the fox:
-        gltf.scene.scale.set(0.025, 0.025, 0.025)
-        gltf.scene.position.set(0, 0, -90)
-        // console.log(gltf.scene);
-        foxModel = gltf.scene;
+//         //Model: scale the fox:
+//         gltf.scene.scale.set(0.025, 0.025, 0.025)
+//         gltf.scene.position.set(0, 0, -90)
+//         // console.log(gltf.scene);
+//         foxModel = gltf.scene;
 
-        //need an animation mixer to deal with the included animations
-        foxMixer = new THREE.AnimationMixer(gltf.scene)
-        //add clips to the mixer:
-        foxStand = foxMixer.clipAction(gltf.animations[0])
-        foxWalk = foxMixer.clipAction(gltf.animations[1])
-        foxRun = foxMixer.clipAction(gltf.animations[2])
-        // console.log(action)
-        // foxWalk.play()
-        // foxStand.play()
+//         //need an animation mixer to deal with the included animations
+//         foxMixer = new THREE.AnimationMixer(gltf.scene)
+//         //add clips to the mixer:
+//         foxStand = foxMixer.clipAction(gltf.animations[0])
+//         foxWalk = foxMixer.clipAction(gltf.animations[1])
+//         foxRun = foxMixer.clipAction(gltf.animations[2])
+//         // console.log(action)
+//         // foxWalk.play()
+//         // foxStand.play()
     
-        //Shadow:        
-        scene.add(gltf.scene)
-        gltf.scene.traverse((child) => {
-            child.castShadow = true
-        })
-    }
-)
+//         //Shadow:        
+//         scene.add(gltf.scene)
+//         gltf.scene.traverse((child) => {
+//             child.castShadow = true
+//         })
+//     }
+// )
 
 /**
  * Test cone
  */
-const coneMesh = new THREE.Mesh(
-    new THREE.ConeGeometry(2, 7, 20),
-    new THREE.MeshStandardMaterial({
-        color: '#118833',
-        metalness: 0,
-        roughness: 0.9,
-    })
-) 
-coneMesh.position.set(6, 2, 1)
-coneMesh.castShadow = true;
-coneMesh.receiveShadow = true;
-scene.add(coneMesh);
+// const coneMesh = new THREE.Mesh(
+//     new THREE.ConeGeometry(2, 7, 20),
+//     new THREE.MeshStandardMaterial({
+//         color: '#118833',
+//         metalness: 0,
+//         roughness: 0.9,
+//     })
+// ) 
+// coneMesh.position.set(6, 2, 1)
+// coneMesh.castShadow = true;
+// coneMesh.receiveShadow = true;
+// scene.add(coneMesh);
 
 
 /**
@@ -137,7 +137,7 @@ const coordinates = lowerWheatyGeojson.geometry.coordinates[0][0];
 
 const shape = new THREE.Shape();
 
-//drawing the shape:
+// drawing the shape:
 coordinates.forEach((coordinate, i) => {
     //I think these figures were suggested by chatgpt? anyway it's to reduce the crazy values - must be a better way - Do I need to keep the raw values though to integrate with elevation data or will I do this a whole different way eventually??? Probably.
     const offsetX = 266158;
@@ -159,16 +159,16 @@ const lowerWheatyGeometry = new THREE.ExtrudeGeometry(
 // console.log(lowerWheatyGeometry);
 
 const lowerWheaty = new THREE.Mesh(
-    lowerWheatyGeometry, new THREE.MeshStandardMaterial({
+    lowerWheatyGeometry, new THREE.MeshBasicMaterial({
     // wireframe: true,
     color: '#118833',
-    metalness: 0,
-    roughness: 0.9,
+    // metalness: 0,
+    // roughness: 0.9,
     side: THREE.DoubleSide
 }))
 // console.log(lowerWheaty);
 lowerWheaty.rotation.x = Math.PI * -0.5
-lowerWheaty.position.set(-20, -0.1, 20)
+lowerWheaty.position.set(0, 10, 0)
 lowerWheaty.receiveShadow = true
 scene.add(lowerWheaty);
 
@@ -178,57 +178,164 @@ scene.add(lowerWheaty);
 // ok now just get stuff out of separate file (utm version):
 
 // But wait... won't I want the fields separately anyway in their own variables and put the  drawing of the shape into a function?
-const fields = [];
 
+
+//but this will be separated into modules anyway?
 fetch('./geojson/utm/fields-fenced-area.geojson')
     .then(response => response.json()) 
     .then(geojsonData => {
-        // gets first field name:
-        // console.log(geojsonData.features[0].properties.Field_Name)
-        geojsonData.features.forEach((field) => {          
+        //make these to stop me getting too confused?
+        const fields = {};
+        fields.names = []
+        fields.coordinates = [];
+        // push the relevant bits:
+        geojsonData.features.forEach((field, i) => {          
             // console.log(field.geometry.coordinates[0][0]);
-            fields.push(field.geometry.coordinates[0][0]);
+            // console.log(field.properties.Field_Name)
+            fields.names.push(field.properties.Field_Name)
+            fields.coordinates.push(field.geometry.coordinates[0][0]);
         })
+
+        //get each field's coordinates - there are 26 - ok theres a better way I know!
+        const field1Coordinates = fields.coordinates[0];
+        const field2Coordinates = fields.coordinates[1];
+        const field3Coordinates = fields.coordinates[2];
+        const field4Coordinates = fields.coordinates[3];
+        const field5Coordinates = fields.coordinates[4];
+        const field6Coordinates = fields.coordinates[5];
+        const field7Coordinates = fields.coordinates[6];
+        const field8Coordinates = fields.coordinates[7];
+        const field9Coordinates = fields.coordinates[8];
+        const field10Coordinates = fields.coordinates[9];
+        const field11Coordinates = fields.coordinates[10];
+        const field12Coordinates = fields.coordinates[11];
+        const field13Coordinates = fields.coordinates[12];
+        const field14Coordinates = fields.coordinates[13];
+        const field15Coordinates = fields.coordinates[14];
+        const field16Coordinates = fields.coordinates[15];
+        const field17Coordinates = fields.coordinates[16];
+        const field18Coordinates = fields.coordinates[17];
+        const field19Coordinates = fields.coordinates[18];
+        const field20Coordinates = fields.coordinates[19];
+        const field21Coordinates = fields.coordinates[20];
+        const field22Coordinates = fields.coordinates[21];
+        const field23Coordinates = fields.coordinates[22];
+        const field24Coordinates = fields.coordinates[23];
+        const field25Coordinates = fields.coordinates[24];
+        const field26Coordinates = fields.coordinates[25];
+
+
+        const shape = new THREE.Shape();
+
+        const makeFieldShape = (coordinates, shape) => {
+            if(coordinates) {
+                coordinates.forEach((coordinate, i) => {
+                    // Need to think about thse offset from chatgpt - leave it for now 
+                    const offsetX = 266158;
+                    const offsetY = 98114;
+                    //ok so this only works on each field separately because it keeps drawing from the last point!
+                    if (i === 0) {
+                        shape.moveTo(coordinate[0] - offsetX, coordinate[1] - offsetY);
+                    } else { 
+                        shape.lineTo(coordinate[0] - offsetX, coordinate[1] - offsetY);
+                    }
+                });
+            } 
+            //i am a fool- forgot return:
+            return shape  
+        }
+
+        // ok so these are all getting added to shape but I will also need them separately before long - at least I can see them though
+        // ** AND probably?? won't even be eventually doing this anyway ...
+        const field1Shape = makeFieldShape(field1Coordinates, shape);
+        // console.log(field1Shape);
+        console.log(fields);
+        const field2Shape = makeFieldShape(field2Coordinates, shape);
+        const field3Shape = makeFieldShape(field2Coordinates, shape);
+        const field4Shape = makeFieldShape(field4Coordinates, shape);
+        const field5Shape = makeFieldShape(field5Coordinates, shape);
+        const field6Shape = makeFieldShape(field6Coordinates, shape);
+        const field7Shape = makeFieldShape(field7Coordinates, shape);
+        const field8Shape = makeFieldShape(field8Coordinates, shape);
+        const field9Shape = makeFieldShape(field9Coordinates, shape);
+        const field10Shape = makeFieldShape(field10Coordinates, shape);
+        const field11Shape = makeFieldShape(field11Coordinates, shape);
+        const field12Shape = makeFieldShape(field12Coordinates, shape);
+        const field13Shape = makeFieldShape(field13Coordinates, shape);
+        const field14Shape = makeFieldShape(field14Coordinates, shape);
+        const field15Shape = makeFieldShape(field15Coordinates, shape);
+        const field16Shape = makeFieldShape(field16Coordinates, shape);
+        const field17Shape = makeFieldShape(field17Coordinates, shape);
+        const field18Shape = makeFieldShape(field18Coordinates, shape);
+        const field19Shape = makeFieldShape(field19Coordinates, shape);
+        const field20Shape = makeFieldShape(field20Coordinates, shape);
+        const field21Shape = makeFieldShape(field21Coordinates, shape);
+        const field22Shape = makeFieldShape(field22Coordinates, shape);
+        const field23Shape = makeFieldShape(field23Coordinates, shape);
+        const field24Shape = makeFieldShape(field24Coordinates, shape);
+        const field25Shape = makeFieldShape(field25Coordinates, shape);
+        const field26Shape = makeFieldShape(field26Coordinates, shape);
+    
+
+        const fieldsMesh = new THREE.Mesh(
+            new THREE.ExtrudeGeometry(shape, {
+                depth: 0.1, 
+                bevelEnabled: false
+            }),
+            new THREE.MeshBasicMaterial({
+                // wireframe: true,
+                color: '#55dd88',
+                // metalness: 0,
+                // roughness: 0.9,
+                // side: THREE.DoubleSide
+            })
+        )
+
+        fieldsMesh.rotation.x = Math.PI * -0.5
+        // field1Mesh.position.set(-20, -0.1, 20)
+        // field1Mesh.receiveShadow = true
+        scene.add(fieldsMesh);
+
     });
-console.log(fields);
+
 
 
 /**
  * Lights
  */
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.7)
-scene.add(ambientLight)
+// const ambientLight = new THREE.AmbientLight(0xffffff, 1.7)
+// scene.add(ambientLight)
 
-const directionalLight = new THREE.DirectionalLight(0xfff0dd, 3.8)
-directionalLight.castShadow = true
-// mipmapping so MUST be power of 2:
-directionalLight.shadow.mapSize.set(512, 512)
-directionalLight.shadow.camera.far = 26
-directionalLight.shadow.camera.left = - 10
-directionalLight.shadow.camera.top = 7
-directionalLight.shadow.camera.right = 10
-directionalLight.shadow.camera.bottom = - 7
-// control blur (does not work on PCFSoftShadowMap):
-// directionalLight.shadow.radius = 10
-directionalLight.position.set(0, 4, -10)
-scene.add(directionalLight)
+// const directionalLight = new THREE.DirectionalLight(0xfff0dd, 3.8)
+// directionalLight.castShadow = true
+// // mipmapping so MUST be power of 2:
+// directionalLight.shadow.mapSize.set(512, 512)
+// directionalLight.shadow.camera.far = 200
+// directionalLight.shadow.camera.left = - 10
+// directionalLight.shadow.camera.top = 7
+// directionalLight.shadow.camera.right = 10
+// directionalLight.shadow.camera.bottom = - 15
+// // control blur (does not work on PCFSoftShadowMap):
+// // directionalLight.shadow.radius = 10
+// directionalLight.position.set(0, 15, -100)
+// scene.add(directionalLight)
 
 // Helpers
-const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 0.8)
-scene.add(directionalLightHelper);
-directionalLightHelper.visible = false;
+// const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 0.8)
+// scene.add(directionalLightHelper);
+// directionalLightHelper.visible = false;
 
-gui.add(directionalLightHelper, 'visible').name('directionalLightHelper')
+// gui.add(directionalLightHelper, 'visible').name('directionalLightHelper')
 
-const directionalLightShadowCameraHelper = new THREE.CameraHelper(directionalLight.shadow.camera)
-scene.add(directionalLightShadowCameraHelper)
-directionalLightShadowCameraHelper.visible = false;
-console.log(directionalLightShadowCameraHelper)
+// const directionalLightShadowCameraHelper = new THREE.CameraHelper(directionalLight.shadow.camera)
+// scene.add(directionalLightShadowCameraHelper)
+// directionalLightShadowCameraHelper.visible = false;
+// // console.log(directionalLightShadowCameraHelper)
 
-gui.add(directionalLightShadowCameraHelper, 'visible').name('dirLightShadowCamHelper')
+// gui.add(directionalLightShadowCameraHelper, 'visible').name('dirLightShadowCamHelper')
 
-gui.add(ambientLight, 'intensity').min(0).max(5).step(0.0001).name('ambientIntensity');
-gui.add(directionalLight, 'intensity').min(0).max(5).step(0.0001);
+// gui.add(ambientLight, 'intensity').min(0).max(5).step(0.0001).name('ambientIntensity');
+// gui.add(directionalLight, 'intensity').min(0).max(5).step(0.0001);
 
 
 
@@ -259,8 +366,8 @@ window.addEventListener('resize', () =>
  * Camera
  */
 // Base camera
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 400)
-camera.position.set(20, 10, 10)
+const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height)
+camera.position.set(0, 400, 400)
 scene.add(camera)
 
 // Controls
@@ -282,15 +389,15 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 /**
  * Sky
  */
-const sky = new Sky()
-sky.scale.set(500, 500, 500)
-scene.add(sky)
-// These are shader things!!: they can be used just as .property but using theses key array thingies is the convention:
-sky.material.uniforms['turbidity'].value = 6
-sky.material.uniforms['rayleigh'].value = 1
-sky.material.uniforms['mieCoefficient'].value = 0.7
-sky.material.uniforms['mieDirectionalG'].value = 0.8
-sky.material.uniforms['sunPosition'].value.set(0.3, 0.03, -10.0)
+// const sky = new Sky()
+// sky.scale.set(500, 500, 500)
+// scene.add(sky)
+// // These are shader things!!: they can be used just as .property but using theses key array thingies is the convention:
+// sky.material.uniforms['turbidity'].value = 6
+// sky.material.uniforms['rayleigh'].value = 1
+// sky.material.uniforms['mieCoefficient'].value = 0.7
+// sky.material.uniforms['mieDirectionalG'].value = 0.8
+// sky.material.uniforms['sunPosition'].value.set(0.3, 0.03, -10.0)
 
 
 /**
@@ -299,7 +406,7 @@ sky.material.uniforms['sunPosition'].value.set(0.3, 0.03, -10.0)
 //Fog() params are color, near and far - Opacity:
 // scene.fog = new THREE.Fog('#ff0000', 1, 13)
 //alternative - more realistic - params color and density
-scene.fog = new THREE.FogExp2('#333c43', 0.01)
+// scene.fog = new THREE.FogExp2('#333c43', 0.01)
 
 /**
  * Animate
@@ -314,25 +421,25 @@ const tick = () =>
     const deltaTime = elapsedTime - previousTime
     previousTime = elapsedTime
 
-    // Update mixer (but mixer will always be null because the animation takes time to load so this code gets reached first)
-    if (foxMixer !== null) {
+    // // Update mixer (but mixer will always be null because the animation takes time to load so this code gets reached first)
+    // if (foxMixer !== null) {
 
-        foxMixer.update(deltaTime * 0.5)
-        // console.log(foxMixer)
-    }
+    //     foxMixer.update(deltaTime * 0.5)
+    //     // console.log(foxMixer)
+    // }
     
-    // console.log(foxModel)
-    if (foxModel) {
-        if (elapsedTime <= 5){
-            foxStand.play()
-        } else if (elapsedTime > 5 ){
-            //this literally stops everything...:
-            // foxMixer.stopAllAction()
-            foxWalk.play()
-            foxModel.position.z += deltaTime * foxWalkSpeed * 0.5
-            // Bye, fox!!
-        } // there are better ways? -see AnimationMixer in the docs..
-    }
+    // // console.log(foxModel)
+    // if (foxModel) {
+    //     if (elapsedTime <= 5){
+    //         foxStand.play()
+    //     } else if (elapsedTime > 5 ){
+    //         //this literally stops everything...:
+    //         // foxMixer.stopAllAction()
+    //         foxWalk.play()
+    //         foxModel.position.z += deltaTime * foxWalkSpeed * 0.5
+    //         // Bye, fox!!
+    //     } // there are better ways? -see AnimationMixer in the docs..
+    // }
     
     
     // Update controls
