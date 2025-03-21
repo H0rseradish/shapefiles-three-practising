@@ -3,7 +3,7 @@
 
 //docs: https://leafletjs.com/reference.html
 //initialize the map and set chosen view to geographical coordinates, plus a zoom level:
-var map = L.map('map').setView([50.740801, -3.937569], 9);
+var map = L.map('map').setView([50.740801, -3.937569], 12);
 
 //add the actual tile layer (check usage policies for prod at: https://operations.osmfoundation.org/policies/tiles/)
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {

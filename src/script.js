@@ -139,9 +139,8 @@ const shape = new THREE.Shape();
 
 // drawing the shape:
 coordinates.forEach((coordinate, i) => {
-    //I think these figures were suggested by chatgpt? anyway it's to reduce the crazy values - must be a better way - Do I need to keep the raw values though to integrate with elevation data or will I do this a whole different way eventually??? Probably.
-    const offsetX = 266158;
-    const offsetY = 98114;
+    const offsetX = 265900;
+    const offsetY = 98200;
     if (i === 0) {
         shape.moveTo(coordinate[0] - offsetX, coordinate[1] - offsetY);
     } else { 
@@ -168,7 +167,8 @@ const lowerWheaty = new THREE.Mesh(
 }))
 // console.log(lowerWheaty);
 lowerWheaty.rotation.x = Math.PI * -0.5
-lowerWheaty.position.set(0, 10, 0)
+lowerWheaty.rotation.z = Math.PI * 0.5;
+lowerWheaty.position.set(0, 8, 0)
 lowerWheaty.receiveShadow = true
 scene.add(lowerWheaty);
 
@@ -225,14 +225,17 @@ fetch('./geojson/utm/fields-fenced-area.geojson')
         const field26Coordinates = fields.coordinates[25];
 
 
-        const shape = new THREE.Shape();
+        // const shape = new THREE.Shape();
 
-        const makeFieldShape = (coordinates, shape) => {
+        const makeFieldShape = (coordinates) => {
+
+            const shape = new THREE.Shape();
+
             if(coordinates) {
                 coordinates.forEach((coordinate, i) => {
-                    // Need to think about thse offset from chatgpt - leave it for now 
-                    const offsetX = 266158;
-                    const offsetY = 98114;
+                    // These determine the centre of the scene - can it be calculated rather than hardcoded???? Is that even desirable??
+                    const offsetX = 265900;
+                    const offsetY = 98200;
                     //ok so this only works on each field separately because it keeps drawing from the last point!
                     if (i === 0) {
                         shape.moveTo(coordinate[0] - offsetX, coordinate[1] - offsetY);
@@ -241,60 +244,73 @@ fetch('./geojson/utm/fields-fenced-area.geojson')
                     }
                 });
             } 
-            //i am a fool- forgot return:
-            return shape  
+              
+            const fieldMesh = new THREE.Mesh(
+                new THREE.ExtrudeGeometry(shape, {
+                    depth: 0.1, 
+                    bevelEnabled: false
+                }),
+                new THREE.MeshBasicMaterial({
+                    // wireframe: true,
+                    color: '#55dd88',
+                })
+            )
+            fieldMesh.rotation.x = Math.PI * - 0.5;
+            fieldMesh.rotation.z = Math.PI * 0.5;
+            scene.add(fieldMesh) 
         }
+        // makeFieldShape(coordinates)
 
         // ok so these are all getting added to shape but I will also need them separately before long - at least I can see them though
         // ** AND probably?? won't even be eventually doing this anyway ...
-        const field1Shape = makeFieldShape(field1Coordinates, shape);
+        const field1Shape = makeFieldShape(field1Coordinates);
         // console.log(field1Shape);
         console.log(fields);
-        const field2Shape = makeFieldShape(field2Coordinates, shape);
-        const field3Shape = makeFieldShape(field2Coordinates, shape);
-        const field4Shape = makeFieldShape(field4Coordinates, shape);
-        const field5Shape = makeFieldShape(field5Coordinates, shape);
-        const field6Shape = makeFieldShape(field6Coordinates, shape);
-        const field7Shape = makeFieldShape(field7Coordinates, shape);
-        const field8Shape = makeFieldShape(field8Coordinates, shape);
-        const field9Shape = makeFieldShape(field9Coordinates, shape);
-        const field10Shape = makeFieldShape(field10Coordinates, shape);
-        const field11Shape = makeFieldShape(field11Coordinates, shape);
-        const field12Shape = makeFieldShape(field12Coordinates, shape);
-        const field13Shape = makeFieldShape(field13Coordinates, shape);
-        const field14Shape = makeFieldShape(field14Coordinates, shape);
-        const field15Shape = makeFieldShape(field15Coordinates, shape);
-        const field16Shape = makeFieldShape(field16Coordinates, shape);
-        const field17Shape = makeFieldShape(field17Coordinates, shape);
-        const field18Shape = makeFieldShape(field18Coordinates, shape);
-        const field19Shape = makeFieldShape(field19Coordinates, shape);
-        const field20Shape = makeFieldShape(field20Coordinates, shape);
-        const field21Shape = makeFieldShape(field21Coordinates, shape);
-        const field22Shape = makeFieldShape(field22Coordinates, shape);
-        const field23Shape = makeFieldShape(field23Coordinates, shape);
-        const field24Shape = makeFieldShape(field24Coordinates, shape);
-        const field25Shape = makeFieldShape(field25Coordinates, shape);
-        const field26Shape = makeFieldShape(field26Coordinates, shape);
+        const field2Shape = makeFieldShape(field2Coordinates);
+        const field3Shape = makeFieldShape(field3Coordinates);
+        const field4Shape = makeFieldShape(field4Coordinates);
+        const field5Shape = makeFieldShape(field5Coordinates);
+        const field6Shape = makeFieldShape(field6Coordinates);
+        const field7Shape = makeFieldShape(field7Coordinates);
+        const field8Shape = makeFieldShape(field8Coordinates);
+        const field9Shape = makeFieldShape(field9Coordinates);
+        const field10Shape = makeFieldShape(field10Coordinates);
+        const field11Shape = makeFieldShape(field11Coordinates);
+        const field12Shape = makeFieldShape(field12Coordinates);
+        const field13Shape = makeFieldShape(field13Coordinates);
+        const field14Shape = makeFieldShape(field14Coordinates);
+        const field15Shape = makeFieldShape(field15Coordinates);
+        const field16Shape = makeFieldShape(field16Coordinates);
+        const field17Shape = makeFieldShape(field17Coordinates);
+        const field18Shape = makeFieldShape(field18Coordinates);
+        const field19Shape = makeFieldShape(field19Coordinates);
+        const field20Shape = makeFieldShape(field20Coordinates);
+        const field21Shape = makeFieldShape(field21Coordinates);
+        const field22Shape = makeFieldShape(field22Coordinates);
+        const field23Shape = makeFieldShape(field23Coordinates);
+        const field24Shape = makeFieldShape(field24Coordinates);
+        const field25Shape = makeFieldShape(field25Coordinates);
+        const field26Shape = makeFieldShape(field26Coordinates);
     
 
-        const fieldsMesh = new THREE.Mesh(
-            new THREE.ExtrudeGeometry(shape, {
-                depth: 0.1, 
-                bevelEnabled: false
-            }),
-            new THREE.MeshBasicMaterial({
-                // wireframe: true,
-                color: '#55dd88',
-                // metalness: 0,
-                // roughness: 0.9,
-                // side: THREE.DoubleSide
-            })
-        )
+        // const fieldsMesh = new THREE.Mesh(
+        //     new THREE.ExtrudeGeometry(shape, {
+        //         depth: 0.1, 
+        //         bevelEnabled: false
+        //     }),
+        //     new THREE.MeshBasicMaterial({
+        //         // wireframe: true,
+        //         color: '#55dd88',
+        //         // metalness: 0,
+        //         // roughness: 0.9,
+        //         // side: THREE.DoubleSide
+        //     })
+        // )
 
-        fieldsMesh.rotation.x = Math.PI * -0.5
-        // field1Mesh.position.set(-20, -0.1, 20)
-        // field1Mesh.receiveShadow = true
-        scene.add(fieldsMesh);
+        // fieldsMesh.rotation.x = Math.PI * -0.5
+        // // field1Mesh.position.set(-20, -0.1, 20)
+        // // field1Mesh.receiveShadow = true
+        // scene.add(fieldsMesh);
 
     });
 
@@ -303,22 +319,22 @@ fetch('./geojson/utm/fields-fenced-area.geojson')
 /**
  * Lights
  */
-// const ambientLight = new THREE.AmbientLight(0xffffff, 1.7)
-// scene.add(ambientLight)
+const ambientLight = new THREE.AmbientLight(0xffffff, 1.7)
+scene.add(ambientLight)
 
-// const directionalLight = new THREE.DirectionalLight(0xfff0dd, 3.8)
-// directionalLight.castShadow = true
-// // mipmapping so MUST be power of 2:
-// directionalLight.shadow.mapSize.set(512, 512)
-// directionalLight.shadow.camera.far = 200
-// directionalLight.shadow.camera.left = - 10
-// directionalLight.shadow.camera.top = 7
-// directionalLight.shadow.camera.right = 10
-// directionalLight.shadow.camera.bottom = - 15
-// // control blur (does not work on PCFSoftShadowMap):
-// // directionalLight.shadow.radius = 10
-// directionalLight.position.set(0, 15, -100)
-// scene.add(directionalLight)
+const directionalLight = new THREE.DirectionalLight(0xfff0dd, 3.8)
+directionalLight.castShadow = true
+// mipmapping so MUST be power of 2:
+directionalLight.shadow.mapSize.set(512, 512)
+directionalLight.shadow.camera.far = 200
+directionalLight.shadow.camera.left = - 10
+directionalLight.shadow.camera.top = 7
+directionalLight.shadow.camera.right = 10
+directionalLight.shadow.camera.bottom = - 15
+// control blur (does not work on PCFSoftShadowMap):
+// directionalLight.shadow.radius = 10
+directionalLight.position.set(0, 15, -100)
+scene.add(directionalLight)
 
 // Helpers
 // const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 0.8)
@@ -366,9 +382,14 @@ window.addEventListener('resize', () =>
  * Camera
  */
 // Base camera
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height)
-camera.position.set(0, 400, 400)
+const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 50, 3000)
+camera.position.set(20, 900, 20)
 scene.add(camera)
+
+console.log(camera.position.x)
+
+const cameraHelper = new THREE.CameraHelper(camera);
+scene.add(cameraHelper)
 
 // Controls
 const controls = new OrbitControls(camera, canvas)
