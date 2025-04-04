@@ -6,26 +6,32 @@
     <title>Experimenting - shapefiles, geojson, three, leaflet</title>
 
     <!-- Leaflet.js stylesheet -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-    crossorigin=""/>
+    crossorigin=""/> -->
+
     <!-- Must be AFTER Leaflet stylesheet -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-    crossorigin=""></script>
+    <!-- <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script> -->
     <!-- script to add shapefiles to leaflet -->
+    <!-- <script type="module" src="./leaflet-script.js"></script> -->
 
-
-
-  <script type="module" crossorigin src="/shapefiles-three-practising/assets/index-BXAN4Cbm.js"></script>
-  <link rel="stylesheet" crossorigin href="/shapefiles-three-practising/assets/index-B7NV7BCf.css">
+  <script type="module" crossorigin src="/shapefiles-three-practising/assets/index-Dg64B4cl.js"></script>
+  <link rel="stylesheet" crossorigin href="/shapefiles-three-practising/assets/index-Bf_vZe9m.css">
 </head>
 <body>
     <!-- div for leaflet map-->
-    <div id="map"></div>
-
+    <!-- <div id="map"></div> -->
+    <div id="time-controls">
+        <h1>changes through time</h1>
+        <button id="2011">2011</button>
+        <button id="2016">2016</button>
+    </div>
     <!-- canvas for three.js-->
     <canvas class="webgl"></canvas>
+
     <!-- script for three.js -->
+    <!-- can i put this in the head? check if defer unecessary with type module? -->
     
 </body>
 </html>
