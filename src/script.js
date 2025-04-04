@@ -263,14 +263,8 @@ fetch('./geojson/utm/fields-fenced-area.geojson')
                 // only lowerWheaty (which is global) because of where meshes are made
                 colorChangeField(lowerWheaty);
             } 
-        })
-        
-
-    
+        })    
     });
-
-
-
 
 
 /**
