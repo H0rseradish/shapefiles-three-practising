@@ -1,120 +1,33 @@
-import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { Sky } from 'three/addons/objects/Sky.js'
+// ------------------------------------
+// Keeping everything in one file for now - THEN separate out later following lesson 26 (code structuring)
+// ------------------------------------
 
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
-// import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
-
-import GUI from 'lil-gui'
-
-// console.log(DRACOLoader)
-
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import gsap from 'gsap';
+import GUI from 'lil-gui';
 
 /**
  * Base
  */
 // Debug
-const gui = new GUI()
+const gui = new GUI();
 
 // Canvas
-const canvas = document.querySelector('canvas.webgl')
+const canvas = document.querySelector('canvas.webgl');
 
 // Scene
-const scene = new THREE.Scene()
+const scene = new THREE.Scene();
+
+// Fields changes:
+// Try some interactivity
+const timeControls = document.getElementById('time-controls');
+// console.log(timeControls);
+const button2011 = document.getElementById('2011');
+const button2016 = document.getElementById('2016');
+const explanation = document.createElement('p');
 
 
-
-/**
- * Update all materials - all the shadows - problem because the shadow cam is a mesh apparently..
- */
-// const updateAllMaterials = () =>
-//     {
-//         scene.traverse((child) =>
-//         {
-//             if(child.isMesh)
-//             {
-//                 // Activate shadows here
-//                 child.castShadow = true
-//                 child.receiveShadow = true
-//             }
-//         })
-//     }
-
-
-/**
- * Models
-*/
-//OK THE FOX HAS DISAPPEARED SINCE DOING THE STUFF TO GET IT ON TO GITHUB PAGES - ok sorted - needed a dot before the slash in the path...
-
-
-//Have left draco loader in because hope to add my own blender model
-// // have to instantiate DRACOLoader ***BEFORE*** GLTFLoader
-// const dracoLoader = new DRACOLoader()
-// // first copy the draco lib (from node_modules/three/examples/jsm/libs) to the static folder, then set the path to it using setDecoderPath():
-// dracoLoader.setDecoderPath('/draco/')
-
-//instantiate glTFLoader:
-// const gltfLoader = new GLTFLoader()
-
-// // finally, give the dracoLoader instance to the the gltf loader, using setDRACOLoader():
-// // gltfLoader.setDRACOLoader(dracoLoader)
-
-// // //You have to load it -  and then do something with it
-// // //takes path to gltf file, and 3 callbacks tracking progress
-
-
-
-// // neeed to create this in global scope because need to pass it into the tick function to update it on each frame
-// let foxMixer = null
-// let foxModel = null
-// let foxStand = null
-// let foxWalk = null
-// let foxRun = null
-// //load the fox
-// gltfLoader.load(
-//     './models/Fox/glTF/Fox.gltf',
-//     (gltf) => {
-//         // console.log(gltf)
-
-//         //Model: scale the fox:
-//         gltf.scene.scale.set(0.025, 0.025, 0.025)
-//         gltf.scene.position.set(0, 0, -90)
-//         // console.log(gltf.scene);
-//         foxModel = gltf.scene;
-
-//         //need an animation mixer to deal with the included animations
-//         foxMixer = new THREE.AnimationMixer(gltf.scene)
-//         //add clips to the mixer:
-//         foxStand = foxMixer.clipAction(gltf.animations[0])
-//         foxWalk = foxMixer.clipAction(gltf.animations[1])
-//         foxRun = foxMixer.clipAction(gltf.animations[2])
-//         // console.log(action)
-//         // foxWalk.play()
-//         // foxStand.play()
-    
-//         //Shadow:        
-//         scene.add(gltf.scene)
-//         gltf.scene.traverse((child) => {
-//             child.castShadow = true
-//         })
-//     }
-// )
-
-/**
- * Test cone
- */
-// const coneMesh = new THREE.Mesh(
-//     new THREE.ConeGeometry(2, 7, 20),
-//     new THREE.MeshStandardMaterial({
-//         color: '#118833',
-//         metalness: 0,
-//         roughness: 0.9,
-//     })
-// ) 
-// coneMesh.position.set(6, 2, 1)
-// coneMesh.castShadow = true;
-// coneMesh.receiveShadow = true;
-// scene.add(coneMesh);
 
 
 /**
@@ -137,7 +50,7 @@ const coordinates = lowerWheatyGeojson.geometry.coordinates[0][0];
 
 const shape = new THREE.Shape();
 
-// drawing the shape:
+// drawing the shape ( if else from chatgpt? the offset figures here were definitely sugggested by chatgpt):
 coordinates.forEach((coordinate, i) => {
     const offsetX = 265900;
     const offsetY = 98200;
@@ -172,6 +85,25 @@ lowerWheaty.position.set(0, 8, 0)
 lowerWheaty.receiveShadow = true
 scene.add(lowerWheaty);
 
+console.log(lowerWheaty.material.color);
+
+//experimenting
+// const colorChange = (mesh) => {
+//     mesh.material.color.set('#ff0000');
+// }
+// colorChange(lowerWheaty)
+
+// down and dirty gsap!
+// const colorChangeExperiment = (mesh) => {
+//     gsap.to(mesh.material.color,
+//         { 
+//             duration: 1,
+//             r: 1,
+//             g: 0,
+//             b: 0 
+//         });
+// }
+// colorChangeExperiment(lowerWheaty)
 
 // All the fields: ---------------:
 
@@ -265,7 +197,7 @@ fetch('./geojson/utm/fields-fenced-area.geojson')
         // ** AND probably?? won't even be eventually doing this anyway ...
         const field1Shape = makeFieldShape(field1Coordinates);
         // console.log(field1Shape);
-        console.log(fields);
+        // console.log(fields);
         const field2Shape = makeFieldShape(field2Coordinates);
         const field3Shape = makeFieldShape(field3Coordinates);
         const field4Shape = makeFieldShape(field4Coordinates);
@@ -291,28 +223,53 @@ fetch('./geojson/utm/fields-fenced-area.geojson')
         const field24Shape = makeFieldShape(field24Coordinates);
         const field25Shape = makeFieldShape(field25Coordinates);
         const field26Shape = makeFieldShape(field26Coordinates);
+
+        // now how - think - I cant get at the meshes! except for lowerWheaty in global - so will need to do the above differently 
+        const colorChangeField = (mesh) => {
+            gsap.to(mesh.material.color,
+                { 
+                    duration: 0.8,
+                    r: 1,
+                    g: 0,
+                    b: 0 
+                });
+        }
+        // colorChangeField(lowerWheaty)
+
+        // Showing fields changes:
+        // console.log(button2011);
+        // experiments:
+        button2011.addEventListener('click', () => {
+            console.log('clicked 2011');
+            // console.log (!explanation.innerText);
+            explanation.innerText = ''
+            if (!explanation.innerText) {
+                // console.log('its empty')
+                explanation.innerText = 'Baseline period'; 
+                timeControls.appendChild(explanation);
+            } 
+            // else {
+            //     explanation.innerText = ''
+            // }
+        });
+
+        button2016.addEventListener('click', () => {
+            console.log('clicked 2016');
+            explanation.innerText = ''
+            if (!explanation.innerText) {
+                // console.log('its empty')
+                explanation.innerText = 'First system change period'; 
+                timeControls.appendChild(explanation);
+                // only lowerWheaty (which is global) because of where meshes are made
+                colorChangeField(lowerWheaty);
+            } 
+        })
+        
+
     
-
-        // const fieldsMesh = new THREE.Mesh(
-        //     new THREE.ExtrudeGeometry(shape, {
-        //         depth: 0.1, 
-        //         bevelEnabled: false
-        //     }),
-        //     new THREE.MeshBasicMaterial({
-        //         // wireframe: true,
-        //         color: '#55dd88',
-        //         // metalness: 0,
-        //         // roughness: 0.9,
-        //         // side: THREE.DoubleSide
-        //     })
-        // )
-
-        // fieldsMesh.rotation.x = Math.PI * -0.5
-        // // field1Mesh.position.set(-20, -0.1, 20)
-        // // field1Mesh.receiveShadow = true
-        // scene.add(fieldsMesh);
-
     });
+
+
 
 
 
@@ -407,27 +364,7 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
-/**
- * Sky
- */
-// const sky = new Sky()
-// sky.scale.set(500, 500, 500)
-// scene.add(sky)
-// // These are shader things!!: they can be used just as .property but using theses key array thingies is the convention:
-// sky.material.uniforms['turbidity'].value = 6
-// sky.material.uniforms['rayleigh'].value = 1
-// sky.material.uniforms['mieCoefficient'].value = 0.7
-// sky.material.uniforms['mieDirectionalG'].value = 0.8
-// sky.material.uniforms['sunPosition'].value.set(0.3, 0.03, -10.0)
 
-
-/**
- * Fog
- */
-//Fog() params are color, near and far - Opacity:
-// scene.fog = new THREE.Fog('#ff0000', 1, 13)
-//alternative - more realistic - params color and density
-// scene.fog = new THREE.FogExp2('#333c43', 0.01)
 
 /**
  * Animate
@@ -442,26 +379,8 @@ const tick = () =>
     const deltaTime = elapsedTime - previousTime
     previousTime = elapsedTime
 
-    // // Update mixer (but mixer will always be null because the animation takes time to load so this code gets reached first)
-    // if (foxMixer !== null) {
+    //update material
 
-    //     foxMixer.update(deltaTime * 0.5)
-    //     // console.log(foxMixer)
-    // }
-    
-    // // console.log(foxModel)
-    // if (foxModel) {
-    //     if (elapsedTime <= 5){
-    //         foxStand.play()
-    //     } else if (elapsedTime > 5 ){
-    //         //this literally stops everything...:
-    //         // foxMixer.stopAllAction()
-    //         foxWalk.play()
-    //         foxModel.position.z += deltaTime * foxWalkSpeed * 0.5
-    //         // Bye, fox!!
-    //     } // there are better ways? -see AnimationMixer in the docs..
-    // }
-    
     
     // Update controls
     controls.update()
