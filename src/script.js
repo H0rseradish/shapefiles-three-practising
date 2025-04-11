@@ -85,7 +85,7 @@ lowerWheaty.position.set(0, 8, 0)
 lowerWheaty.receiveShadow = true
 scene.add(lowerWheaty);
 
-console.log(lowerWheaty.material.color);
+// console.log(lowerWheaty.material.color);
 
 //experimenting
 // const colorChange = (mesh) => {
@@ -337,7 +337,7 @@ const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 50, 3
 camera.position.set(20, 900, 20)
 scene.add(camera)
 
-console.log(camera.position.x)
+// console.log(camera.position.x)
 
 const cameraHelper = new THREE.CameraHelper(camera);
 scene.add(cameraHelper)
