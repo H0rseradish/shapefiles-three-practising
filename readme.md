@@ -24,7 +24,9 @@ npm run build
 ## Use of chatgpt:
 
 ### Refactoring:
-Hi chat, I am refactoring my spaghetti three.js app into modules/classes. There is a single huge file of  geojson data that I fetching and using to draw geometries - they are fields on a farm, 21 in total. I will need to have these fiels separately in my app to do various things with them. At the moment I am doing everything within the fetch. How do I separate this out into a class so my geojson fields are available wherever I want them? (sic)
+Q. Hi chat, I am refactoring my spaghetti three.js app into modules/classes. There is a single huge file of  geojson data that I fetching and using to draw geometries - they are fields on a farm, 21 in total. I will need to have these fiels separately in my app to do various things with them. At the moment I am doing everything within the fetch. How do I separate this out into a class so my geojson fields are available wherever I want them? 
+
+**In the end, I only used lines 40 - 42 from below!**
 
 #### Code Suggested by chatgpt:
 // FieldManager.js

@@ -60,13 +60,6 @@ export default class Experience
             this.update();
         })
 
-        // Load event:
-        this.geojsonLoader.on('json ready', () => {
-            console.log('hopefully there is a huge array of fields') // there is now!
-            
-            //call Fieldsmanager class - is that how to do it?
-        })
-
     }
 
     // this gets called when a resize event is heard. 
