@@ -6,14 +6,14 @@ export default class GeojsonLoader extends EventEmitter {
         super() 
         // console.log('geojsonLoader Go');
         this.geojsonUrl = geojsonUrl;
-        this.fields = [];
+        this.geojson = [];
 
         // Investigate! I think it is not going to work?
         this.loaded = false;
         
         // calling the method in the constructor:
         this.load()
-        console.log(this.fields)//ok they are there
+        console.log(this.geojson)//ok they are there
     }
 
     // actually load:
@@ -30,8 +30,8 @@ export default class GeojsonLoader extends EventEmitter {
         if (geojson) { 
             //use EventEmitter:
             this.trigger('json ready');
-            this.fields.push(geojson);
-            console.log(this.fields) // it worked!
+            this.geojson.push(geojson);
+            console.log(this.geojson) // it worked!
         }
         
     }

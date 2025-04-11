@@ -7,6 +7,7 @@ import World from './World/World.js';
 import Resources from './Utils/Resources.js';
 import GeojsonLoader from './Utils/GeojsonLoader.js';
 
+
 // Making Experience class into a singleton - need to define an instance:
 let instance = null;
 
@@ -33,8 +34,12 @@ export default class Experience
         this.sizes = new Sizes();
         this.time = new Time();
         this.scene = new THREE.Scene();
+
+        // still need to sort this out - because will be doing this multiple times. 
+        // Not here!!!, call this loader as I use it - ie in Fields to get the fields, in drains to get the drains etc:
         this.geojsonLoader = new GeojsonLoader('./geojson/utm/fields-fenced-area.geojson');
         // this.resources = new Resources();
+
         this.camera = new Camera();
         this.renderer = new Renderer();
         this.world = new World();
@@ -57,7 +62,7 @@ export default class Experience
 
         // Load event:
         this.geojsonLoader.on('json ready', () => {
-            console.log('hopefully there is a huge array of fields') // there isnt.
+            console.log('hopefully there is a huge array of fields') // there is now!
             
             //call Fieldsmanager class - is that how to do it?
         })
