@@ -13,14 +13,17 @@ export default class GeojsonLoader extends EventEmitter {
         
         // calling the method in the constructor:
         this.load()
+
         // console.log(this.geojson)//ok they are there
     }
 
-    // actually load:
+    // actually load with this function:
     async load() {
         // (console.log('load function Go'))
         const response = await fetch(this.geojsonUrl);
         const geojson = await response.json();
+        //try this:
+        // this.trigger('json ready', geojson);
 
         // this.loaded = true; // is this bollox from chat? YES IT WAS? or would it be better to do if geojson? will investigate.
         //maybe use Bruno's way. Or have I made a more fundamental mistake YES YOU HAVE!! - with the async
@@ -32,6 +35,8 @@ export default class GeojsonLoader extends EventEmitter {
             
             this.geojson.push(geojson);
             this.trigger('json ready');
+            //do I need this return:
+            return this.geojson;
             // console.log(this.geojson) // it worked!
         }
         
