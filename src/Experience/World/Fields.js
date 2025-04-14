@@ -8,35 +8,37 @@ export default class Fields {
         this.experience = new Experience();
         this.geojsonLoader = new GeojsonLoader('./geojson/utm/fields-fenced-area.geojson')
 
-        // wait is this relevant now? NO? Have I repeated myself - not sure
-        this.fieldsData = this.geojsonLoader.geojson;
-        console.log(this.fieldsData)//YESSSS!!.
+        //ok confusion largely resolved.
 
         //storing   
-        // this.fields = [];
+        this.fieldsData = null;
 
         //   Should this be in a method? need to think
-        // Load , using on to ensure has loaded:
-        this.geojsonLoader.on('json ready', () => {
-            // am I just repeating here? No but I am confusing myself.
-            // this.fields.push(this.fieldsData);
 
-            // this.fieldsData[0].features.forEach((item) => {
-            //     console.log(item);//yes this gets it
-            // })
-            //what about here? no...YES because Fields passed in here you utter twat
-            this.fieldsNames(this.fieldsData)
-            console.log(this.fieldsData)
-            // console.log(this.fields)
+        // Using on to ensure has loaded before attempting to store it:
+        this.geojsonLoader.on('json ready', (geojson) => {
+            // I can do this now, (after actually passing the geojson in the trigger...)
+            this.fieldsData = geojson;
+            
+            //and functions now get called here where the data exists.. 
+            this.getFieldsData()
+            //console.log(this.fieldsData)//
         })
     }
 
     // experiment - this DOES work now...
-    fieldsNames() {
-        console.log(this.fieldsData);
-        // console.log(this.fields[0]);
-        // console.log(this.fields[0][0]);
-        // console.log(this.fields[0][0].features);
+    getFieldsData() {
+        // console.log(this.fieldsData.features);
+
+        // maybe this elsewhere in a different class to do with building fields?
+        // const fieldsNames = []
+        // this.fieldsData.features.forEach((feature) => {
+        //     console.log(feature.properties.Field_Name); // halle bleeding luyah
+        //     fieldsNames.push(feature.properties.Field_Name)
+        // })
+        // return fieldsNames;
+        return this.fieldsData;
     }
-    
+
+    //more methods or elsewhere?
 }

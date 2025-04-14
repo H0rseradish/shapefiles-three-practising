@@ -9,8 +9,11 @@ export default class World {
         this.experience = new Experience();
         this.scene = this.experience.scene;
 
+        //ok this works now!
+        const fields = new Fields();
 
-        this.fields = new Fields();
+
+        console.log(fields)
 
         //Test mesh 
         const testMesh = new THREE.Mesh(

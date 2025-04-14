@@ -22,23 +22,15 @@ export default class GeojsonLoader extends EventEmitter {
         // (console.log('load function Go'))
         const response = await fetch(this.geojsonUrl);
         const geojson = await response.json();
-        //try this:
+        //try this: oh look I did it here...fool
         // this.trigger('json ready', geojson);
-
-        // this.loaded = true; // is this bollox from chat? YES IT WAS? or would it be better to do if geojson? will investigate.
-        //maybe use Bruno's way. Or have I made a more fundamental mistake YES YOU HAVE!! - with the async
-
-        // console.log(geojson) // woo hoo at least this works
         
         if (geojson) { 
-            //use EventEmitter:
-            
             this.geojson.push(geojson);
-            this.trigger('json ready');
-            //do I need this return:
-            return this.geojson;
+            //use EventEmitter:
+            // aha I needed to pass this.geojson to the trigger!!!!!! 
+            this.trigger('json ready', this.geojson);
             // console.log(this.geojson) // it worked!
         }
-        
     }
 }
