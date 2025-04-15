@@ -1,3 +1,4 @@
+import * as THREE from 'three';
 import Experience from "../Experience";
 import FieldsDataLoader from "./FieldsDataLoader";
 
@@ -23,6 +24,8 @@ export default class Fields {
             console.log(this.fields);
 
             this.getFieldNames();
+            this.makeOneField(0);
+            this.makeAllFields()
         })
         
     }
@@ -39,11 +42,45 @@ export default class Fields {
         console.log(fieldNames)
         return fieldNames;
     }
+    
 
     // ok try something else:
-    makeAField() {
+    makeOneField(index) {
+        //making lowerWheaty!
+        console.log(this.fields[index].geometry.coordinates[0][0]);
 
+        const shape = new THREE.Shape();
+
+        const fieldcoords = this.fields[0].geometry.coordinates[0][0];
+
+        fieldcoords.forEach((coordinate, i) => {
+            const offsetX = 265900;
+            const offsetY = 98200;
+                if(i === 0) {
+                    shape.moveTo(coordinate[0] - offsetX, coordinate[1] - offsetY);
+                } else { 
+                    shape.lineTo(coordinate[0] - offsetX, coordinate[1] - offsetY);
+                }
+        })
+
+        const geometry = new THREE.ExtrudeGeometry(shape, { depth: 0.1, bevelEnabled: false })
+
+        const mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({
+            color: '#118833',
+            side: THREE.DoubleSide
+        }))
+
+        mesh.rotation.x = Math.PI * -0.5
+        mesh.rotation.z = Math.PI * 0.5;
+        mesh.position.set(0, 1, 0)
+        this.scene.add(mesh);
     }
+
+    makeAllFields() {
+        
+    }
+
+    // hey what about a switch case thingy to make all the fields at once ??
 
 }
 
