@@ -2,18 +2,17 @@ import * as THREE from 'three';
 
 import Experience from "../Experience";
 import Environment from './Environment';
-import Fields from './Fields';
+import FieldsDataLoader from './FieldsDataLoader';
+import Fields from './Fields.js'
 
 export default class World {
     constructor() {
         this.experience = new Experience();
         this.scene = this.experience.scene;
 
-        //ok this works now!
-        const fields = new Fields();
-
-
-        console.log(fields)
+        //not sure what I am actually doing here - brain has melted.
+        this.fields = new Fields();
+        
 
         //Test mesh 
         const testMesh = new THREE.Mesh(
@@ -25,4 +24,5 @@ export default class World {
         // Setup:
         this.environment = new Environment();
     }
+
 }

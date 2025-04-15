@@ -1,44 +1,49 @@
 import Experience from "../Experience";
-import GeojsonLoader from "../Utils/GeojsonLoader";
+import FieldsDataLoader from "./FieldsDataLoader";
 
 export default class Fields {
-    constructor() {
-        // console.log('fields, Go!');
-        
+    constructor(){
+        console.log('Fields, go!');
+        // dont forget Experience is a singleton so it is not a different instance...
         this.experience = new Experience();
-        this.geojsonLoader = new GeojsonLoader('./geojson/utm/fields-fenced-area.geojson')
+        this.scene = this.experience.scene;
 
-        //ok confusion largely resolved.
+        // the geojson resource:
+        this.fieldsData = new FieldsDataLoader();
+        // console.log(this.fieldsData)
+        this.fields = null;
+        // some methods that happen here: what will I need?
 
-        //storing   
-        this.fieldsData = null;
+        // do I need the on here? YES
+        this.fieldsData.on('fieldsData ready', (fieldsData) => {
+            console.log('fields here hopefully')
 
-        //   Should this be in a method? need to think
+            //and this is no longer undefined after remembering the this.... chatgpt was totally USELESS at spotting that I had missed it. It took me hours to work it out.
+            this.fields = this.fieldsData.geojson.features;
+            console.log(this.fields);
 
-        // Using on to ensure has loaded before attempting to store it:
-        this.geojsonLoader.on('json ready', (geojson) => {
-            // I can do this now, (after actually passing the geojson in the trigger...)
-            this.fieldsData = geojson;
-            
-            //and functions now get called here where the data exists.. 
-            this.getFieldsData()
-            //console.log(this.fieldsData)//
+            this.getFieldNames();
         })
+        
+    }
+    // ok try this
+    getFieldNames() {
+        console.log(this.fields)
+        const fieldNames = [];
+
+        this.fields.forEach((feature) => {
+            // console.log(feature.properties.Field_Name);
+            fieldNames.push(feature.properties.Field_Name);
+        })
+
+        console.log(fieldNames)
+        return fieldNames;
     }
 
-    // experiment - this DOES work now...
-    getFieldsData() {
-        // console.log(this.fieldsData.features);
+    // ok try something else:
+    makeAField() {
 
-        // maybe this elsewhere in a different class to do with building fields?
-        // const fieldsNames = []
-        // this.fieldsData.features.forEach((feature) => {
-        //     console.log(feature.properties.Field_Name); // halle bleeding luyah
-        //     fieldsNames.push(feature.properties.Field_Name)
-        // })
-        // return fieldsNames;
-        return this.fieldsData;
     }
 
-    //more methods or elsewhere?
 }
+

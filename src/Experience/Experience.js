@@ -5,7 +5,7 @@ import Camera from './Camera.js';
 import Renderer from './Renderer.js';
 import World from './World/World.js';
 import Resources from './Utils/Resources.js';
-import GeojsonLoader from './Utils/GeojsonLoader.js';
+// import GeojsonLoader from './Utils/GeojsonLoader.js';
 
 
 // Making Experience class into a singleton - need to define an instance:
@@ -35,9 +35,12 @@ export default class Experience
         this.time = new Time();
         this.scene = new THREE.Scene();
 
+        
+
+
         // still need to sort this out - because will be doing this multiple times. 
         // Not here!!!, call this loader as I use it - ie in Fields to get the fields, in drains to get the drains etc:
-        this.geojsonLoader = new GeojsonLoader('./geojson/utm/fields-fenced-area.geojson');
+        // this.geojsonLoader = new GeojsonLoader('./geojson/utm/fields-fenced-area.geojson');
         // this.resources = new Resources();
 
         this.camera = new Camera();

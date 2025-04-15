@@ -6,7 +6,10 @@ export default class GeojsonLoader extends EventEmitter {
         super() 
         // console.log('geojsonLoader Go');
         this.geojsonUrl = geojsonUrl;
-        this.geojson = [];
+        // this.geojson = [];
+
+        this.geojson = null;
+        
 
         // Investigate! I think it is not going to work?
         this.loaded = false;
@@ -26,7 +29,8 @@ export default class GeojsonLoader extends EventEmitter {
         // this.trigger('json ready', geojson);
         
         if (geojson) { 
-            this.geojson.push(geojson);
+            // this.geojson.push(geojson);
+            this.geojson = geojson;
             //use EventEmitter:
             // aha I needed to pass this.geojson to the trigger!!!!!! 
             this.trigger('json ready', this.geojson);
