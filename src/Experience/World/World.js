@@ -2,27 +2,25 @@ import * as THREE from 'three';
 
 import Experience from "../Experience";
 import Environment from './Environment';
-import FieldsDataLoader from './FieldsDataLoader';
 import Fields from './Fields.js'
+import UserControls from './UserControls.js';
 
 export default class World {
     constructor() {
         this.experience = new Experience();
         this.scene = this.experience.scene;
 
-        // build fields
+        
+        
+        // Setup:
+        // NB not actually needing environment at the moment.. (not needed for field materials)
+        this.environment = new Environment();
+        // build fields- 
         this.fields = new Fields();
         
+        this.usercontrols = new UserControls();
 
-        // //Test mesh 
-        // const testMesh = new THREE.Mesh(
-        //     new THREE.BoxGeometry(200, 200, 200),
-        //     new THREE.MeshStandardMaterial({ wireframe: false })
-        // )
-        // this.scene.add(testMesh);
-
-        // Setup:
-        this.environment = new Environment();
+        // will need an update method in here
     }
 
 }
