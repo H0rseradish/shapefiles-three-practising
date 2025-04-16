@@ -18,8 +18,9 @@ export default class Camera {
 
     // Make the creation of the camera a method (called in the constructor):
     setInstance() {
-        this.instance = new THREE.PerspectiveCamera(75, this.sizes.width / this.sizes.height, 50, 3000);
-        this.instance.position.set(20, 900, 20);
+        this.instance = new THREE.PerspectiveCamera(75, this.sizes.width / this.sizes.height, 50, 2000);
+        //thinking about this, it would be better to solve the immense size issue when making the meshes???
+        this.instance.position.set(300, 700, 400);
         // do this here to avoid issues:
         this.scene.add(this.instance);
     }

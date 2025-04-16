@@ -24,8 +24,9 @@ export default class Fields {
             console.log(this.fields);
 
             this.getFieldNames();
-            this.makeOneField(0);
-            this.makeAllFields()
+            // this.makeOneField(7);
+            this.makeAllFields();
+            this.makeAllFields2();
         })
         
     }
@@ -51,36 +52,73 @@ export default class Fields {
 
         const shape = new THREE.Shape();
 
-        const fieldcoords = this.fields[0].geometry.coordinates[0][0];
+        const fieldcoords = this.fields[index].geometry.coordinates[0][0];
 
         fieldcoords.forEach((coordinate, i) => {
             const offsetX = 265900;
             const offsetY = 98200;
-                if(i === 0) {
-                    shape.moveTo(coordinate[0] - offsetX, coordinate[1] - offsetY);
-                } else { 
-                    shape.lineTo(coordinate[0] - offsetX, coordinate[1] - offsetY);
-                }
+            if(i === 0) {
+                shape.moveTo(coordinate[0] - offsetX, coordinate[1] - offsetY);
+            } else { 
+                shape.lineTo(coordinate[0] - offsetX, coordinate[1] - offsetY);
+            }
         })
 
         const geometry = new THREE.ExtrudeGeometry(shape, { depth: 0.1, bevelEnabled: false })
 
+        //going to have to separate out the colour though - maybe split this function into two - one to do the geometries and one to make and render the meshes.
         const mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({
-            color: '#118833',
+            color: '#ff0033',
             side: THREE.DoubleSide
         }))
 
         mesh.rotation.x = Math.PI * -0.5
         mesh.rotation.z = Math.PI * 0.5;
-        mesh.position.set(0, 1, 0)
+        mesh.position.set(0, 3, 0)
         this.scene.add(mesh);
     }
 
     makeAllFields() {
-        
+
+        this.fields.forEach((field, index) => {
+            //no need to repeat though, use function above?
+            //JUST MAKE SURE - REPEAT IT FIRST!
+            const shape = new THREE.Shape()
+            // console.log(field.geometry.coordinates[0][0])
+            const coordinates = field.geometry.coordinates[0][0]
+
+            coordinates.forEach((coordinate, i) => {
+                const offsetX = 265900;
+                const offsetY = 98200;
+                if(i === 0) {
+                    shape.moveTo(coordinate[0] - offsetX, coordinate[1] - offsetY);
+                } else { 
+                    shape.lineTo(coordinate[0] - offsetX, coordinate[1] - offsetY);
+                }
+            })
+            const geometry = new THREE.ExtrudeGeometry(shape, { depth: 0.1, bevelEnabled: false })
+
+            const mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({
+                color: '#119933',
+                side: THREE.DoubleSide
+            }))
+
+            mesh.rotation.x = Math.PI * - 0.5
+            mesh.rotation.z = Math.PI * 0.5;
+
+            this.scene.add(mesh);
+        })
     }
 
-    // hey what about a switch case thingy to make all the fields at once ??
-
+    //now try it without repeating myself!!!!!
+    makeAllFields2() {
+        this.fields.forEach((field, index) => {
+            this.makeOneField(index)
+        })
+    }
 }
+
+
+
+
 

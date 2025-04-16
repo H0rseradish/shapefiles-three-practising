@@ -10,16 +10,16 @@ export default class World {
         this.experience = new Experience();
         this.scene = this.experience.scene;
 
-        //not sure what I am actually doing here - brain has melted.
+        // build fields
         this.fields = new Fields();
         
 
-        //Test mesh 
-        const testMesh = new THREE.Mesh(
-            new THREE.BoxGeometry(200, 200, 200),
-            new THREE.MeshStandardMaterial({ wireframe: false })
-        )
-        this.scene.add(testMesh);
+        // //Test mesh 
+        // const testMesh = new THREE.Mesh(
+        //     new THREE.BoxGeometry(200, 200, 200),
+        //     new THREE.MeshStandardMaterial({ wireframe: false })
+        // )
+        // this.scene.add(testMesh);
 
         // Setup:
         this.environment = new Environment();
