@@ -116,6 +116,22 @@ export default class Fields {
             this.makeOneField(index)
         })
     }
+
+    //thinking about this.. what is the best way?? bearing in mind systems, changes to systems etc
+    makeFieldGeometry(index) {
+
+    }
+
+    makeFieldMaterial(color) {
+
+    }
+
+    makeFieldMesh() {
+
+    }
+
+   
+
 }
 
 
