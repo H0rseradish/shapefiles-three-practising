@@ -74,6 +74,11 @@ export default class TimelineController {
                     console.log('2011 clicked');
                     this.fields.makeAllFields2();
                     break;
+                case '2013':
+                    console.log('2011 clicked');
+                    this.fields.makeAllFields2();
+                    break;
+
 
                     
             
