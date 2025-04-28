@@ -21,12 +21,17 @@ export default class Fields {
 
             //and this is no longer undefined after remembering the this.... chatgpt was totally USELESS at spotting that I had missed it. It took me hours to work it out.
             this.fields = this.fieldsData.geojson.features;
-            console.log(this.fields);
+
+            //separating out the fields:
+            //what is going to be the best way
+            this.selectedFields = this.fields.slice(6, 9);
+            console.log(this.selectedFields);
 
             this.getFieldNames();
-            // this.makeOneField(7);
+            this.makeOneField([0]);
             this.makeAllFields();
-            this.makeAllFields2();
+            this.makeSelectedFields(this.selectedFields);
+            // this.makeAllFields2();
         })
         
     }
@@ -118,18 +123,51 @@ export default class Fields {
     }
 
     //thinking about this.. what is the best way?? bearing in mind systems, changes to systems etc
-    makeFieldGeometry(index) {
+    // makeFieldGeometry(index) {
+    // }
+    // makeFieldMaterial(color) {
+    // }
+    // makeFieldMesh() {
+    // }
 
+    // make color a param:
+    makeSingleField(index, color) {
+        //making lowerWheaty!
+        console.log(this.fields[index].geometry.coordinates[0][0]);
+
+        const shape = new THREE.Shape();
+
+        const fieldcoords = this.fields[index].geometry.coordinates[0][0];
+
+        fieldcoords.forEach((coordinate, i) => {
+            const offsetX = 265900;
+            const offsetY = 98200;
+            if(i === 0) {
+                shape.moveTo(coordinate[0] - offsetX, coordinate[1] - offsetY);
+            } else { 
+                shape.lineTo(coordinate[0] - offsetX, coordinate[1] - offsetY);
+            }
+        })
+
+        const geometry = new THREE.ExtrudeGeometry(shape, { depth: 0.1, bevelEnabled: false })
+
+        const mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({
+            color: color,
+            side: THREE.DoubleSide
+        }))
+
+        mesh.rotation.x = Math.PI * -0.5
+        mesh.rotation.z = Math.PI * 0.5;
+        mesh.position.set(0, 3, 0)
+        this.scene.add(mesh);
     }
 
-    makeFieldMaterial(color) {
-
+    //is this the best way??? - I could pass in the relevant array eg blueFields THIS IS NOT DOING WHAT I EXPECTED!!! its just picking the first three of the original array - because of the code in makeOne Field is using the original array.  
+    makeSelectedFields(array) {
+        array.forEach((field, index) => {
+            this.makeOneField(index)
+        })
     }
-
-    makeFieldMesh() {
-
-    }
-
    
 
 }

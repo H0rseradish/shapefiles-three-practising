@@ -3,7 +3,8 @@ import * as THREE from 'three';
 import Experience from "../Experience";
 import Environment from './Environment';
 import Fields from './Fields.js'
-import UserControls from './UserControls.js';
+import TimelineController from './TimelineController.js';
+import TimelineEvents from './TimelineEvents.js';
 
 export default class World {
     constructor() {
@@ -18,7 +19,9 @@ export default class World {
         // build fields- 
         this.fields = new Fields();
         
-        this.usercontrols = new UserControls();
+        this.timelineEvents = new TimelineEvents();
+
+        this.timelineController = new TimelineController();
 
         // will need an update method in here
     }

@@ -25,7 +25,44 @@ body
     height: 300px;
   }
 
-#time-controls {
+#yearHeading {
+    position: fixed;
+    z-index: 6;
+    color: white;
+    height: 2em;
+    margin: 5vw;
+} 
+
+#timelineContainer {
     position: fixed;
     z-index: 5;
+    margin-top: 90vh;
+}
+
+/* range input */
+
+/* reset styles */
+input[type="range"] {
+    /* -webkit-appearance: none; override default */
+    /* appearance: none; */
+    background: white;
+    height: 2px;
+    cursor: pointer;
+    width: 90vw;
+    margin-left: 5vw;
+    /* background-color: white; */
+    color: white;  
+}
+/* remove default focus */
+input[type="range"]:focus {
+    /* -webkit-appearance: none; override default */
+    /* outline: none; */
+}
+
+datalist {
+    display:flex;
+    justify-content: space-between;
+    font-size: 0.5em;
+    margin-left: 5vw;
+    width: 90vw;
 }
