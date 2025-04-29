@@ -89,6 +89,7 @@ export default class Fields {
             // this.makeSelectedFields2(this.baselineFields2010, '#00ff99', 0);
             // this.makeAllFields2();
             this.drawLine()
+            this.drawSingleFieldBoundary(0, '#ffff11', 12)
         })
         
     }
@@ -273,21 +274,21 @@ export default class Fields {
         console.log(coordinatesXZ);
 
         // but will this make my objects inside? or do I want a bunch of vector3s ???? try it, see what happens
-        // Actually I think this will be fine because I don't need to use setFromPoints, can just pass it (positions/boundaryPoints) into BufferATTRIBUTE!!!!
+        // Actually I think this will be fine because I don't need to use setFromPoints, can just pass it (positions/boundaryCoords) into BufferATTRIBUTE!!!!
         
 
-        const boundaryPoints = new Float32Array(fieldPointsCount * 3)
+        const boundaryCoords = new Float32Array(fieldPointsCount * 3)
 
         for(let i = 0; i < fieldPointsCount; i++) {
 
             const i3 = i * 3;
             //think about this:
-            boundaryPoints[i3 + 0] = (coordinatesXZ[i][0]) - offsetX;
-            boundaryPoints[i3 + 1] = y;
-            boundaryPoints[i3 + 2] = (coordinatesXZ[i][1]) - offsetZ;
+            boundaryCoords[i3 + 0] = (coordinatesXZ[i][0]) - offsetX;
+            boundaryCoords[i3 + 1] = 0;
+            boundaryCoords[i3 + 2] = (coordinatesXZ[i][1]) - offsetZ;
         }
        // woo hoo!
-        console.log(boundaryPoints)
+        console.log(boundaryCoords)
 
         const lineGeometry = new THREE.BufferGeometry().
         setFromPoints(points);
@@ -298,46 +299,57 @@ export default class Fields {
 
         const boundaryGeometry = new THREE.BufferGeometry();
 
-        boundaryGeometry.setAttribute('position', new THREE.BufferAttribute(boundaryPoints, 3))
+        boundaryGeometry.setAttribute('position', new THREE.BufferAttribute(boundaryCoords, 3))
 
         //fuck yes.
         const boundaryLine = new THREE.Line(boundaryGeometry, material);
         console.log(boundaryLine)
         this.scene.add(boundaryLine);
+        //this is it:
+        boundaryLine.rotation.x = Math.PI * - 0.5
+        boundaryLine.rotation.y = Math.PI * - 0.5;
+        boundaryLine.rotation.z = Math.PI * 0.5;
+        //shall I control the y here? Yes
+        boundaryLine.position.set(0, y, 0)
         
     }
 
 
+    drawSingleFieldBoundary(index, color, y) {
 
-    makeSingleFieldBoundary(index, color) {
-        //making lowerWheaty!
-        // need to change all below now to make points, a bfferGeom, a line geometry and a line material. will need to think about this - specially re making the points.
-        console.log(this.fields[index].geometry.coordinates[0][0]);
+        const coordinatesXZ = this.fields[index].geometry.coordinates[0][0];
+        // console.log(coordinatesXZ);
+        const coordinatesXZCount = coordinatesXZ.length;
 
-        const shape = new THREE.Shape();
+        //these must be consistent across ALL the drawing of the geojson!!!!
+        const offsetX = 265900;
+        const offsetZ = 98200;
 
-        const fieldcoords = this.fields[index].geometry.coordinates[0][0];
+        const boundaryCoords = new Float32Array(coordinatesXZCount * 3);
 
-        fieldcoords.forEach((coordinate, i) => {
-            const offsetX = 265900;
-            const offsetY = 98200;
-            if(i === 0) {
-                shape.moveTo(coordinate[0] - offsetX, coordinate[1] - offsetY);
-            } else { 
-                shape.lineTo(coordinate[0] - offsetX, coordinate[1] - offsetY);
-            }
-        })
+        for(let i = 0; i < coordinatesXZCount; i++) {
+            //the Bruno method:
+            const i3 = i * 3;
+            //think about this:
+            boundaryCoords[i3 + 0] = (coordinatesXZ[i][0]) - offsetX;
+            boundaryCoords[i3 + 1] = 0;
+            boundaryCoords[i3 + 2] = (coordinatesXZ[i][1]) - offsetZ;
+        }
+       // woo hoo!
+        console.log(boundaryCoords)
 
-        const geometry = new THREE.ExtrudeGeometry(shape, { depth: 0.1, bevelEnabled: false })
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute('position', new THREE.BufferAttribute(boundaryCoords, 3));
 
-        const mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({
-            color: color,
-            side: THREE.DoubleSide
-        }))
+        const material = new THREE.LineBasicMaterial({ color: color });
 
-        mesh.rotation.x = Math.PI * -0.5
+        const mesh = new THREE.Line(geometry, material);
+
+        mesh.rotation.x = Math.PI * - 0.5;
+        mesh.rotation.y = Math.PI * - 0.5;
         mesh.rotation.z = Math.PI * 0.5;
-        mesh.position.set(0, 3, 0)
+        mesh.position.set(0, y, 0);
+
         this.scene.add(mesh);
     }
 
