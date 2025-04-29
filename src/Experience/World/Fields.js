@@ -28,24 +28,18 @@ export default class Fields {
         this.redFields2013 = null
 
 
-        // do I need the on here? YES
+        // do I need the on() here? YES
         this.fieldsData.on('fieldsData ready', (fieldsData) => {
             console.log('fields here hopefully')
 
-            //and this is no longer undefined after remembering the this.... chatgpt was totally USELESS at spotting that I had missed it. It took me hours to work it out.
             this.fields = this.fieldsData.geojson.features;
 
-            //separating out the fields:
-            //what is going to be the best way? see wes bos.
-            //what about map and filter???
-            //slice is immutable ie does not affect the original array. can use spread operator to remove stuff from middle of array see wes bos 
-            this.selectedFields = this.fields.slice(6, 9);
-            console.log(this.selectedFields);
-            // splice is more useful here - or is it?????? ... BUT is mutable so will need to spread the original array into a new array and work on that.
+            // separating out the fields:
+            // spread operator to obtain stuff from middle of array from wes bos 
 
-            // NB index 16: Burrows new shape, 
-            // 21: Burrows old shape, 
-            // 22 to 25: various new shapes/changes
+            // sorting out the various permutation of rendering the fields:
+
+            // NB no index 16(Burrows new shape) or 21(Burrows old shape) or 22-25(various new shapes/changes)
             this.baselineFields2010 = [
                 ...this.fields.slice(0, 16),
                 ...this.fields.slice(17, 22),
@@ -58,7 +52,7 @@ export default class Fields {
                 ...this.fields.slice(11, 13),
                 // 16:Burrows(new boundary), 17:Bottom Burrows
                 ...this.fields.slice(16, 18)
-            ]
+            ];
             console.log(this.greenFields2013);
 
             this.blueFields2013 = [
@@ -72,33 +66,41 @@ export default class Fields {
                 ...this.fields.slice(14, 15),
                 // 19:Dairy Corner
                 ...this.fields.slice(19, 20),
-            ]
+            ];
             console.log(this.blueFields2013);
+
+            this.redFields2013 = [
+                // 6:Lower Wheaty, 7:Pecketsford, 8:Great Field, 9:Longlands East
+                ...this.fields.slice(6, 10),
+                // 13:Poor Field
+                ...this.fields.slice(13, 14),
+                // 15:Ware Park
+                ...this.fields.slice(15, 16),
+                // 18:Little Pecketsford
+                ...this.fields.slice(18, 19),
+            ];
+            console.log(this.redFields2013);
 
 
             this.getFieldNames();
             // this.makeOneField([0]);
             // this.makeAllFields();
 
-            // below function does not work (will delete)
-            // this.makeSelectedFields(this.selectedFields);
-
-            // this.makeSelectedFields2(this.selectedFields, '#0077ff');
-            this.makeSelectedFields2(this.baselineFields2010, '#00ff99', 0);
+            // this.makeSelectedFields2(this.baselineFields2010, '#00ff99', 0);
             // this.makeAllFields2();
+            this.drawLine()
         })
         
     }
     // ok try this
     getFieldNames() {
-        console.log(this.fields)
+        // console.log(this.fields)
         const fieldNames = [];
 
         this.fields.forEach((feature) => {
             // console.log(feature.properties.Field_Name);
             fieldNames.push(feature.properties.Field_Name);
         })
-
         console.log(fieldNames)
         return fieldNames;
     }
@@ -106,8 +108,7 @@ export default class Fields {
 
     // ok try something else:
     makeOneField(index) {
-        //making lowerWheaty!
-        console.log(this.fields[index].geometry.coordinates[0][0]);
+        // console.log(this.fields[index].geometry.coordinates[0][0]);
 
         const shape = new THREE.Shape();
 
@@ -169,20 +170,13 @@ export default class Fields {
         })
     }
 
-    //now try it without repeating myself!!!!!
-    makeAllFields2() {
-        this.fields.forEach((field, index) => {
-            this.makeOneField(index)
-        })
-    }
+    //now try it without repeating myself!!!!! But wont actually need this - it will always be a selection:
+    // makeAllFields2() {
+    //     this.fields.forEach((field, index) => {
+    //         this.makeOneField(index)
+    //     })
+    // }
 
-    //thinking about this.. what is the best way?? bearing in mind systems, changes to systems etc
-    // makeFieldGeometry(index) {
-    // }
-    // makeFieldMaterial(color) {
-    // }
-    // makeFieldMesh() {
-    // }
 
     // make color a param:
     makeSingleField(index, color) {
@@ -216,14 +210,9 @@ export default class Fields {
         this.scene.add(mesh);
     }
 
-    //is this the best way??? - I could pass in the relevant array eg blueFields THIS IS NOT DOING WHAT I EXPECTED!!! its just picking the first three of the original array - because of the code in makeOne Field is using the original array.  
-    makeSelectedFields(array) {
-        array.forEach((field, index) => {
-            this.makeOneField(index)
-        })
-    }
+  
     //try to get it to work - this works:
-    // (now need to make it concise and not repetitive)
+    // (BUT now need to make it concise and not repetitive)
     makeSelectedFields2(fieldsArray, color, y) {
 
         fieldsArray.forEach((field, index) => {
@@ -257,7 +246,69 @@ export default class Fields {
         })
     }
 
-    
+    drawLine() {
+        const material = new THREE.LineBasicMaterial({ color: 0xffffff });
+        const y = 10;
+
+        const offsetX = 265900;
+        const offsetZ = 98200;
+
+
+        const points = [];
+        points.push(new THREE.Vector3(-100, 10, 0));
+        points.push(new THREE.Vector3(0, 10, 100));
+        points.push(new THREE.Vector3(100, 10, 0));
+        points.push(new THREE.Vector3(-100, 10, 0));
+        // points is an array of 4 ojects, each holding xyz (3) key value pairs:
+        console.log(points)
+        // my data - below -is an array of 30 arrays each containing 2 coordinate values (effectively x and z):
+        console.log(this.fields[6].geometry.coordinates[0][0]);
+        //so.. I need to make this into the same structure as points
+        //Bruno lessons 18, !!
+        const fieldPointsCount = this.fields[6].geometry.coordinates[0][0].length;
+        console.log(fieldPointsCount);
+
+        //simplify it a bit:
+        const coordinatesXZ = this.fields[6].geometry.coordinates[0][0];
+        console.log(coordinatesXZ);
+
+        // but will this make my objects inside? or do I want a bunch of vector3s ???? try it, see what happens
+        // Actually I think this will be fine because I don't need to use setFromPoints, can just pass it (positions/boundaryPoints) into BufferATTRIBUTE!!!!
+        
+
+        const boundaryPoints = new Float32Array(fieldPointsCount * 3)
+
+        for(let i = 0; i < fieldPointsCount; i++) {
+
+            const i3 = i * 3;
+            //think about this:
+            boundaryPoints[i3 + 0] = (coordinatesXZ[i][0]) - offsetX;
+            boundaryPoints[i3 + 1] = y;
+            boundaryPoints[i3 + 2] = (coordinatesXZ[i][1]) - offsetZ;
+        }
+       // woo hoo!
+        console.log(boundaryPoints)
+
+        const lineGeometry = new THREE.BufferGeometry().
+        setFromPoints(points);
+        // console.log(lineGeometry);
+        const line = new THREE.Line(lineGeometry, material)
+        this.scene.add(line)
+
+
+        const boundaryGeometry = new THREE.BufferGeometry();
+
+        boundaryGeometry.setAttribute('position', new THREE.BufferAttribute(boundaryPoints, 3))
+
+        //fuck yes.
+        const boundaryLine = new THREE.Line(boundaryGeometry, material);
+        console.log(boundaryLine)
+        this.scene.add(boundaryLine);
+        
+    }
+
+
+
     makeSingleFieldBoundary(index, color) {
         //making lowerWheaty!
         // need to change all below now to make points, a bfferGeom, a line geometry and a line material. will need to think about this - specially re making the points.
