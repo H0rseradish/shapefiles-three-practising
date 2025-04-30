@@ -215,20 +215,20 @@ export default class TimelineController {
 
                 case '2021':
                     // Sowing of red system - Winter Oats
-                    'Red sown with winter oats';
+                    explanation.innerText = 'Red sown with winter oats';
                     break;
 
                 case '2022':
                     // Sowing of red system - Winter Wheat - No Plough (min till)
-                    'Red sown with winter wheat. Explain minimum tillage.';
+                    explanation.innerText = 'Red sown with winter wheat. Explain minimum tillage.';
                     break;
 
                 case '2023':
-                    'Red sown with? Any other changes?';
+                    explanation.innerText = 'Red sown with? Any other changes?';
                     break;
 
                 case '2024':
-                    'Timeline ends here? Map becomes interactive (click on individual fields for stats, links to data etc) Option to return to timeline.';
+                    explanation.innerText = 'Timeline ends here? Map becomes interactive (click on individual fields for stats, links to data etc) Option to return to timeline.';
                     break;
 
                 default:
