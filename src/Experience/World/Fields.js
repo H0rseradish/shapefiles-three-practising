@@ -20,24 +20,19 @@ export default class Fields {
         this.baselineFields2010 = null;
 
         // first system change:
-        // Fields are separated into Systems:
-        // Green: Burrows/Top Burrows fenceline
-        //
         this.greenFields2013 = null
         this.blueFields2013 = null
         this.redFields2013 = null
 
 
-        // do I need the on() here? YES
+        // do I need the on() here? YES.
         this.fieldsData.on('fieldsData ready', (fieldsData) => {
             console.log('fields here hopefully')
 
             this.fields = this.fieldsData.geojson.features;
 
-            // separating out the fields:
+            // Separating out the fields:
             // spread operator to obtain stuff from middle of array from wes bos 
-
-            // sorting out the various permutation of rendering the fields:
 
             // NB no index 16(Burrows new shape) or 21(Burrows old shape) or 22-25(various new shapes/changes)
             this.baselineFields2010 = [
@@ -53,7 +48,7 @@ export default class Fields {
                 // 16:Burrows(new boundary), 17:Bottom Burrows
                 ...this.fields.slice(16, 18)
             ];
-            console.log(this.greenFields2013);
+            // console.log(this.greenFields2013);
 
             this.blueFields2013 = [
                 // 0:Higher Wyke Moor, 1:Middle Wyke Moor, 2:Lower Wyke Moor
@@ -66,8 +61,7 @@ export default class Fields {
                 ...this.fields.slice(14, 15),
                 // 19:Dairy Corner
                 ...this.fields.slice(19, 20),
-            ];
-            console.log(this.blueFields2013);
+            ];    
 
             this.redFields2013 = [
                 // 6:Lower Wheaty, 7:Pecketsford, 8:Great Field, 9:Longlands East
@@ -79,17 +73,14 @@ export default class Fields {
                 // 18:Little Pecketsford
                 ...this.fields.slice(18, 19),
             ];
-            console.log(this.redFields2013);
-
-
+            
+            //useful to see in the console:
             this.getFieldNames();
-            // this.makeOneField([0]);
-            // this.makeAllFields();
+            this.makeSingleField(20, '#880022', 2)
 
-            // this.makeSelectedFields2(this.baselineFields2010, '#00ff99', 0);
-            // this.makeAllFields2();
-            this.drawLine()
-            this.drawSingleFieldBoundary(0, '#ffff11', 12)
+            this.drawSingleFieldBoundary(20, '#ffff11', 8)
+            this.drawSelectedFieldsBoundaries(this.baselineFields2010, '#ffff11', 8)
+            
         })
         
     }
@@ -106,89 +97,48 @@ export default class Fields {
         return fieldNames;
     }
     
+    // will never need:
+    // makeAllFields() {
 
-    // ok try something else:
-    makeOneField(index) {
-        // console.log(this.fields[index].geometry.coordinates[0][0]);
-
-        const shape = new THREE.Shape();
-
-        const fieldcoords = this.fields[index].geometry.coordinates[0][0];
-
-        fieldcoords.forEach((coordinate, i) => {
-            const offsetX = 265900;
-            const offsetY = 98200;
-            if(i === 0) {
-                shape.moveTo(coordinate[0] - offsetX, coordinate[1] - offsetY);
-            } else { 
-                shape.lineTo(coordinate[0] - offsetX, coordinate[1] - offsetY);
-            }
-        })
-
-        const geometry = new THREE.ExtrudeGeometry(shape, { depth: 0.1, bevelEnabled: false })
-
-        //going to have to separate out the colour though - maybe split this function into two - one to do the geometries and one to make and render the meshes.
-        const mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({
-            color: '#ff0033',
-            side: THREE.DoubleSide
-        }))
-
-        mesh.rotation.x = Math.PI * -0.5
-        mesh.rotation.z = Math.PI * 0.5;
-        mesh.position.set(0, 3, 0)
-        this.scene.add(mesh);
-    }
-
-    makeAllFields() {
-
-        this.fields.forEach((field, index) => {
-            //no need to repeat though, use function above?
-            //JUST MAKE SURE - REPEAT IT FIRST!
-            const shape = new THREE.Shape()
-            // console.log(field.geometry.coordinates[0][0])
-            const coordinates = field.geometry.coordinates[0][0]
-
-            coordinates.forEach((coordinate, i) => {
-                const offsetX = 265900;
-                const offsetY = 98200;
-                if(i === 0) {
-                    shape.moveTo(coordinate[0] - offsetX, coordinate[1] - offsetY);
-                } else { 
-                    shape.lineTo(coordinate[0] - offsetX, coordinate[1] - offsetY);
-                }
-            })
-            const geometry = new THREE.ExtrudeGeometry(shape, { depth: 0.1, bevelEnabled: false })
-
-            const mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({
-                color: '#119933',
-                side: THREE.DoubleSide
-            }))
-
-            mesh.rotation.x = Math.PI * - 0.5
-            mesh.rotation.z = Math.PI * 0.5;
-
-            this.scene.add(mesh);
-        })
-    }
-
-    //now try it without repeating myself!!!!! But wont actually need this - it will always be a selection:
-    // makeAllFields2() {
     //     this.fields.forEach((field, index) => {
-    //         this.makeOneField(index)
+    //         //no need to repeat though, use function above?
+    //         //JUST MAKE SURE - REPEAT IT FIRST!
+    //         const shape = new THREE.Shape()
+    //         // console.log(field.geometry.coordinates[0][0])
+    //         const coordinates = field.geometry.coordinates[0][0]
+
+    //         coordinates.forEach((coordinate, i) => {
+    //             const offsetX = 265900;
+    //             const offsetY = 98200;
+    //             if(i === 0) {
+    //                 shape.moveTo(coordinate[0] - offsetX, coordinate[1] - offsetY);
+    //             } else { 
+    //                 shape.lineTo(coordinate[0] - offsetX, coordinate[1] - offsetY);
+    //             }
+    //         })
+    //         const geometry = new THREE.ExtrudeGeometry(shape, { depth: 0.1, bevelEnabled: false })
+
+    //         const mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({
+    //             color: '#119933',
+    //             side: THREE.DoubleSide,
+    //         }))
+
+    //         mesh.rotation.x = Math.PI * - 0.5
+    //         mesh.rotation.z = Math.PI * 0.5;
+
+    //         this.scene.add(mesh);
     //     })
     // }
 
-
-    // make color a param:
-    makeSingleField(index, color) {
+    makeSingleField(index, color, y) {
         //making lowerWheaty!
-        console.log(this.fields[index].geometry.coordinates[0][0]);
+        // console.log(this.fields[index].geometry.coordinates[0][0]);
 
         const shape = new THREE.Shape();
+        //this below is the problem with reusing this function in the other function:
+        const coordinates = this.fields[index].geometry.coordinates[0][0];
 
-        const fieldcoords = this.fields[index].geometry.coordinates[0][0];
-
-        fieldcoords.forEach((coordinate, i) => {
+        coordinates.forEach((coordinate, i) => {
             const offsetX = 265900;
             const offsetY = 98200;
             if(i === 0) {
@@ -202,19 +152,42 @@ export default class Fields {
 
         const mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({
             color: color,
-            side: THREE.DoubleSide
+            side: THREE.DoubleSide,
         }))
 
-        mesh.rotation.x = Math.PI * -0.5
+        mesh.rotation.x = Math.PI * - 0.5
         mesh.rotation.z = Math.PI * 0.5;
-        mesh.position.set(0, 3, 0)
+        mesh.position.set(0, y, 0)
         this.scene.add(mesh);
     }
 
-  
-    //try to get it to work - this works:
-    // (BUT now need to make it concise and not repetitive)
-    makeSelectedFields2(fieldsArray, color, y) {
+    //********************* SORT THIS  */
+     // (BUT now need to make it concise and not repetitive)
+    //  makeSelectedFieldsConcisely(fieldsArray, color, y) {
+    //     //same mistake as before regarding the new array index of the array conflicting with the original array in the make Single field
+    //     // what about a condition based on something in this.fields I can match with? FieldCode???
+    //     // Yes because my fieldsArray has all the things in it!
+    //     //OR JUST LEAVE THE BIGGER FUNCTION AS IT IS!
+    //     // which is probably better than messing with the data?
+    //     console.log(fieldsArray)
+    //     console.log(this.fields)
+    //     //but what to match? there are duplicates of things. 
+    //     // condition here?
+    //     fieldsArray.forEach((fieldsData, index) => {
+    //         // condition?
+    //         // if (field is something, index is the index )
+    //         index = index;
+    //         console.log(index);
+    //         //this is 
+    //         this.makeSingleField(index, color, y)
+    //         //no need to repeat though, use function above?
+    //     })
+    // }
+//************************ */
+
+    // (BUT now need to make it concise and not repetitive - NO - this complicates things rather than simplifies, because there are no non-duplicated properties in the data, so I couldnt easily make a condition to account for the changed array indexes meaning I couldnt just call makeSingleField() in here:
+
+    makeSelectedFields(fieldsArray, color, y) {
 
         fieldsArray.forEach((field, index) => {
             //no need to repeat though, use function above?
@@ -224,6 +197,7 @@ export default class Fields {
             const coordinates = field.geometry.coordinates[0][0]
 
             coordinates.forEach((coordinate, i) => {
+                //these offsets need to moved to the top because they need to stay constant across all these functions:
                 const offsetX = 265900;
                 const offsetY = 98200;
                 if(i === 0) {
@@ -247,74 +221,7 @@ export default class Fields {
         })
     }
 
-    drawLine() {
-        const material = new THREE.LineBasicMaterial({ color: 0xffffff });
-        const y = 10;
-
-        const offsetX = 265900;
-        const offsetZ = 98200;
-
-
-        const points = [];
-        points.push(new THREE.Vector3(-100, 10, 0));
-        points.push(new THREE.Vector3(0, 10, 100));
-        points.push(new THREE.Vector3(100, 10, 0));
-        points.push(new THREE.Vector3(-100, 10, 0));
-        // points is an array of 4 ojects, each holding xyz (3) key value pairs:
-        console.log(points)
-        // my data - below -is an array of 30 arrays each containing 2 coordinate values (effectively x and z):
-        console.log(this.fields[6].geometry.coordinates[0][0]);
-        //so.. I need to make this into the same structure as points
-        //Bruno lessons 18, !!
-        const fieldPointsCount = this.fields[6].geometry.coordinates[0][0].length;
-        console.log(fieldPointsCount);
-
-        //simplify it a bit:
-        const coordinatesXZ = this.fields[6].geometry.coordinates[0][0];
-        console.log(coordinatesXZ);
-
-        // but will this make my objects inside? or do I want a bunch of vector3s ???? try it, see what happens
-        // Actually I think this will be fine because I don't need to use setFromPoints, can just pass it (positions/boundaryCoords) into BufferATTRIBUTE!!!!
-        
-
-        const boundaryCoords = new Float32Array(fieldPointsCount * 3)
-
-        for(let i = 0; i < fieldPointsCount; i++) {
-
-            const i3 = i * 3;
-            //think about this:
-            boundaryCoords[i3 + 0] = (coordinatesXZ[i][0]) - offsetX;
-            boundaryCoords[i3 + 1] = 0;
-            boundaryCoords[i3 + 2] = (coordinatesXZ[i][1]) - offsetZ;
-        }
-       // woo hoo!
-        console.log(boundaryCoords)
-
-        const lineGeometry = new THREE.BufferGeometry().
-        setFromPoints(points);
-        // console.log(lineGeometry);
-        const line = new THREE.Line(lineGeometry, material)
-        this.scene.add(line)
-
-
-        const boundaryGeometry = new THREE.BufferGeometry();
-
-        boundaryGeometry.setAttribute('position', new THREE.BufferAttribute(boundaryCoords, 3))
-
-        //fuck yes.
-        const boundaryLine = new THREE.Line(boundaryGeometry, material);
-        console.log(boundaryLine)
-        this.scene.add(boundaryLine);
-        //this is it:
-        boundaryLine.rotation.x = Math.PI * - 0.5
-        boundaryLine.rotation.y = Math.PI * - 0.5;
-        boundaryLine.rotation.z = Math.PI * 0.5;
-        //shall I control the y here? Yes
-        boundaryLine.position.set(0, y, 0)
-        
-    }
-
-
+    //woo hoo this works
     drawSingleFieldBoundary(index, color, y) {
 
         const coordinatesXZ = this.fields[index].geometry.coordinates[0][0];
@@ -335,7 +242,47 @@ export default class Fields {
             boundaryCoords[i3 + 1] = 0;
             boundaryCoords[i3 + 2] = (coordinatesXZ[i][1]) - offsetZ;
         }
-       // woo hoo!
+        // console.log(boundaryCoords)
+
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute('position', new THREE.BufferAttribute(boundaryCoords, 3));
+
+        const material = new THREE.LineBasicMaterial({ color: color });
+
+        const mesh = new THREE.Line(geometry, material);
+
+        mesh.rotation.x = Math.PI * - 0.5;
+        mesh.rotation.y = Math.PI * - 0.5;
+        mesh.rotation.z = Math.PI * 0.5;
+        // controlling the y here
+        mesh.position.set(0, y, 0);
+
+        this.scene.add(mesh);
+    }
+
+    //now try this:
+    drawSelectedFieldsBoundaries(fieldsArray, color, y) {       
+
+        fieldsArray.forEach((field) => {
+
+            const coordinatesXZ = field.geometry.coordinates[0][0];
+        // console.log(coordinatesXZ);
+            const coordinatesXZCount = coordinatesXZ.length;
+
+            //these must be consistent across ALL the drawing of the geojson!!!!
+            const offsetX = 265900;
+            const offsetZ = 98200;
+
+            const boundaryCoords = new Float32Array(coordinatesXZCount * 3);
+
+            for(let i = 0; i < coordinatesXZCount; i++) {
+                //the Bruno method:
+                const i3 = i * 3;
+                //think about this:
+                boundaryCoords[i3 + 0] = (coordinatesXZ[i][0]) - offsetX;
+                boundaryCoords[i3 + 1] = 0;
+                boundaryCoords[i3 + 2] = (coordinatesXZ[i][1]) - offsetZ;
+            }
         console.log(boundaryCoords)
 
         const geometry = new THREE.BufferGeometry();
@@ -348,9 +295,12 @@ export default class Fields {
         mesh.rotation.x = Math.PI * - 0.5;
         mesh.rotation.y = Math.PI * - 0.5;
         mesh.rotation.z = Math.PI * 0.5;
+        // controlling the y here
         mesh.position.set(0, y, 0);
 
         this.scene.add(mesh);
+        })
+        
     }
 
 }

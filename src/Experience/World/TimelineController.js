@@ -73,6 +73,7 @@ export default class TimelineController {
             // is using switch here the best way???? Pete?: 
             // will also need to be controlled by scrolling - should they be separate functions instead? 
             // will need to allow for going backwards in time too 
+            //should all this stuff be made into functions and moved into timeline Events Class for neatness?
             switch (event.target.value) {
                 // all the years!
                 case '2008':
@@ -86,12 +87,12 @@ export default class TimelineController {
                     break;
 
                 case '2010':
-                    console.log('2010 clicked');
+                    // console.log('2010 clicked');
                     // Planning consent!!
                     // Construction begins - animation.
                     // Drains and flumes
                     // Lab facilities created
-                    this.fields.makeSelectedFields2(this.fields.baselineFields2010, '#00ff99', 0);
+                    this.fields.makeSelectedFields(this.fields.baselineFields2010, '#00ff99', 0);
                     break;
 
                 case '2011':
@@ -105,14 +106,14 @@ export default class TimelineController {
                     break;
 
                 case '2013':
-                    console.log('2013 clicked');
+                    // console.log('2013 clicked');
                     // First system change implemented, 
                     // reseeding begins
                     // New cattle buildings x 3 - dedicated system housing, silage, manure
                     // Met data begins
-                    this.fields.makeSelectedFields2(this.fields.greenFields2013, '#009911', 3);
-                    this.fields.makeSelectedFields2(this.fields.blueFields2013, '#005599', 3);
-                    this.fields.makeSelectedFields2(this.fields.redFields2013, '#ff0033', 3);
+                    this.fields.makeSelectedFields(this.fields.greenFields2013, '#009911', 3);
+                    this.fields.makeSelectedFields(this.fields.blueFields2013, '#005599', 3);
+                    this.fields.makeSelectedFields(this.fields.redFields2013, '#ff0033', 3);
                     break;
 
                 case '2014':
@@ -175,6 +176,7 @@ export default class TimelineController {
                     break;
 
                 default:
+                    //what, anything?
                     break;
             }  
             
