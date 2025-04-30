@@ -3,8 +3,16 @@ import Experience from "../Experience";
 import FieldsDataLoader from "./FieldsDataLoader";
 
 export default class Fields {
-    constructor(){
+    // I asked chatgpt about the best place for these. It recommended using static, which seemed to make sense, for the moment? Maybe a separate place for constants (utils) if eventually needed by other classes???
+    static OFFSET_X = 265900;
+    static OFFSET_Z = 98200;
+
+    constructor() {
         console.log('Fields, go!');
+
+        this.OFFSET_X = Fields.OFFSET_X;
+        this.OFFSET_Z = Fields.OFFSET_Z;
+
         // dont forget Experience is a singleton so it is not a different instance...
         this.experience = new Experience();
         this.scene = this.experience.scene;
@@ -97,41 +105,8 @@ export default class Fields {
         return fieldNames;
     }
     
-    // will never need:
-    // makeAllFields() {
-
-    //     this.fields.forEach((field, index) => {
-    //         //no need to repeat though, use function above?
-    //         //JUST MAKE SURE - REPEAT IT FIRST!
-    //         const shape = new THREE.Shape()
-    //         // console.log(field.geometry.coordinates[0][0])
-    //         const coordinates = field.geometry.coordinates[0][0]
-
-    //         coordinates.forEach((coordinate, i) => {
-    //             const offsetX = 265900;
-    //             const offsetY = 98200;
-    //             if(i === 0) {
-    //                 shape.moveTo(coordinate[0] - offsetX, coordinate[1] - offsetY);
-    //             } else { 
-    //                 shape.lineTo(coordinate[0] - offsetX, coordinate[1] - offsetY);
-    //             }
-    //         })
-    //         const geometry = new THREE.ExtrudeGeometry(shape, { depth: 0.1, bevelEnabled: false })
-
-    //         const mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({
-    //             color: '#119933',
-    //             side: THREE.DoubleSide,
-    //         }))
-
-    //         mesh.rotation.x = Math.PI * - 0.5
-    //         mesh.rotation.z = Math.PI * 0.5;
-
-    //         this.scene.add(mesh);
-    //     })
-    // }
 
     makeSingleField(index, color, y) {
-        //making lowerWheaty!
         // console.log(this.fields[index].geometry.coordinates[0][0]);
 
         const shape = new THREE.Shape();
@@ -139,12 +114,10 @@ export default class Fields {
         const coordinates = this.fields[index].geometry.coordinates[0][0];
 
         coordinates.forEach((coordinate, i) => {
-            const offsetX = 265900;
-            const offsetY = 98200;
             if(i === 0) {
-                shape.moveTo(coordinate[0] - offsetX, coordinate[1] - offsetY);
+                shape.moveTo(coordinate[0] - this.OFFSET_X, coordinate[1] - this.OFFSET_Z);
             } else { 
-                shape.lineTo(coordinate[0] - offsetX, coordinate[1] - offsetY);
+                shape.lineTo(coordinate[0] - this.OFFSET_X, coordinate[1] - this.OFFSET_Z);
             }
         })
 
@@ -161,31 +134,8 @@ export default class Fields {
         this.scene.add(mesh);
     }
 
-    //********************* SORT THIS  */
-     // (BUT now need to make it concise and not repetitive)
-    //  makeSelectedFieldsConcisely(fieldsArray, color, y) {
-    //     //same mistake as before regarding the new array index of the array conflicting with the original array in the make Single field
-    //     // what about a condition based on something in this.fields I can match with? FieldCode???
-    //     // Yes because my fieldsArray has all the things in it!
-    //     //OR JUST LEAVE THE BIGGER FUNCTION AS IT IS!
-    //     // which is probably better than messing with the data?
-    //     console.log(fieldsArray)
-    //     console.log(this.fields)
-    //     //but what to match? there are duplicates of things. 
-    //     // condition here?
-    //     fieldsArray.forEach((fieldsData, index) => {
-    //         // condition?
-    //         // if (field is something, index is the index )
-    //         index = index;
-    //         console.log(index);
-    //         //this is 
-    //         this.makeSingleField(index, color, y)
-    //         //no need to repeat though, use function above?
-    //     })
-    // }
-//************************ */
 
-    // (BUT now need to make it concise and not repetitive - NO - this complicates things rather than simplifies, because there are no non-duplicated properties in the data, so I couldnt easily make a condition to account for the changed array indexes meaning I couldnt just call makeSingleField() in here:
+    // because there are no non-duplicated properties in the data, so I couldnt easily make a condition to account for the changed array indexes meaning I couldnt just call makeSingleField() in here:
 
     makeSelectedFields(fieldsArray, color, y) {
 
@@ -197,13 +147,10 @@ export default class Fields {
             const coordinates = field.geometry.coordinates[0][0]
 
             coordinates.forEach((coordinate, i) => {
-                //these offsets need to moved to the top because they need to stay constant across all these functions:
-                const offsetX = 265900;
-                const offsetY = 98200;
                 if(i === 0) {
-                    shape.moveTo(coordinate[0] - offsetX, coordinate[1] - offsetY);
+                    shape.moveTo(coordinate[0] - this.OFFSET_X, coordinate[1] - this.OFFSET_Z);
                 } else { 
-                    shape.lineTo(coordinate[0] - offsetX, coordinate[1] - offsetY);
+                    shape.lineTo(coordinate[0] - this.OFFSET_X, coordinate[1] - this.OFFSET_Z);
                 }
             })
             const geometry = new THREE.ExtrudeGeometry(shape, { depth: 0.1, bevelEnabled: false })
@@ -228,19 +175,15 @@ export default class Fields {
         // console.log(coordinatesXZ);
         const coordinatesXZCount = coordinatesXZ.length;
 
-        //these must be consistent across ALL the drawing of the geojson!!!!
-        const offsetX = 265900;
-        const offsetZ = 98200;
-
         const boundaryCoords = new Float32Array(coordinatesXZCount * 3);
 
         for(let i = 0; i < coordinatesXZCount; i++) {
             //the Bruno method:
             const i3 = i * 3;
             //think about this:
-            boundaryCoords[i3 + 0] = (coordinatesXZ[i][0]) - offsetX;
+            boundaryCoords[i3 + 0] = (coordinatesXZ[i][0]) - this.OFFSET_X;
             boundaryCoords[i3 + 1] = 0;
-            boundaryCoords[i3 + 2] = (coordinatesXZ[i][1]) - offsetZ;
+            boundaryCoords[i3 + 2] = (coordinatesXZ[i][1]) - this.OFFSET_Z;
         }
         // console.log(boundaryCoords)
 
@@ -260,7 +203,7 @@ export default class Fields {
         this.scene.add(mesh);
     }
 
-    //now try this:
+    //now try this - it works:
     drawSelectedFieldsBoundaries(fieldsArray, color, y) {       
 
         fieldsArray.forEach((field) => {
@@ -269,19 +212,15 @@ export default class Fields {
         // console.log(coordinatesXZ);
             const coordinatesXZCount = coordinatesXZ.length;
 
-            //these must be consistent across ALL the drawing of the geojson!!!!
-            const offsetX = 265900;
-            const offsetZ = 98200;
-
             const boundaryCoords = new Float32Array(coordinatesXZCount * 3);
 
             for(let i = 0; i < coordinatesXZCount; i++) {
                 //the Bruno method:
                 const i3 = i * 3;
                 //think about this:
-                boundaryCoords[i3 + 0] = (coordinatesXZ[i][0]) - offsetX;
+                boundaryCoords[i3 + 0] = (coordinatesXZ[i][0]) - this.OFFSET_X;
                 boundaryCoords[i3 + 1] = 0;
-                boundaryCoords[i3 + 2] = (coordinatesXZ[i][1]) - offsetZ;
+                boundaryCoords[i3 + 2] = (coordinatesXZ[i][1]) - this.OFFSET_Z;
             }
         console.log(boundaryCoords)
 
