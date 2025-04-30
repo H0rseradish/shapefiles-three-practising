@@ -81,14 +81,16 @@ export default class Fields {
                 // 18:Little Pecketsford
                 ...this.fields.slice(18, 19),
             ];
+
+            this.orchardDeanSplit2015 = [
+                // 24:Orchard Dean North, 25:Orchard Dean South
+                ...this.fields.slice(24),
+            ];
             
             //useful to see in the console:
             this.getFieldNames();
-            this.makeSingleField(20, '#880022', 2)
-
-            this.drawSingleFieldBoundary(20, '#ffff11', 8)
-            this.drawSelectedFieldsBoundaries(this.baselineFields2010, '#ffff11', 8)
             
+            // this.drawSingleFieldBoundary(20, '#ffff11', 8)
         })
         
     }
@@ -135,13 +137,12 @@ export default class Fields {
     }
 
 
-    // because there are no non-duplicated properties in the data, so I couldnt easily make a condition to account for the changed array indexes meaning I couldnt just call makeSingleField() in here:
+    // because there are no non-duplicated properties in the data, so I couldnt easily make a condition to account for the changed array indexes meaning I couldnt just call makeSingleField() in here: OR am I missing something obvious?
 
     makeSelectedFields(fieldsArray, color, y) {
 
         fieldsArray.forEach((field, index) => {
-            //no need to repeat though, use function above?
-            //JUST MAKE SURE - REPEAT IT FIRST!
+            //no need to repeat though, call function from above? see above comment
             const shape = new THREE.Shape()
             // console.log(field.geometry.coordinates[0][0])
             const coordinates = field.geometry.coordinates[0][0]
@@ -222,7 +223,7 @@ export default class Fields {
                 boundaryCoords[i3 + 1] = 0;
                 boundaryCoords[i3 + 2] = (coordinatesXZ[i][1]) - this.OFFSET_Z;
             }
-        console.log(boundaryCoords)
+        // console.log(boundaryCoords)
 
         const geometry = new THREE.BufferGeometry();
         geometry.setAttribute('position', new THREE.BufferAttribute(boundaryCoords, 3));
